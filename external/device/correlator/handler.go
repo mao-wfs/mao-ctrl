@@ -50,17 +50,11 @@ func (h *Handler) Halt(ctx context.Context, ht time.Time) error {
 }
 
 func (h *Handler) start(ctx context.Context, st, et time.Time) error {
-	if err := h.startCorrelation(st, et); err != nil {
-		return err
-	}
-	return nil
+	return h.startCorrelation(st, et)
 }
 
 func (h *Handler) halt(ctx context.Context, ht time.Time) error {
-	if err := h.haltCorrelation(ht); err != nil {
-		return err
-	}
-	return nil
+	return h.haltCorrelation(ht)
 }
 
 func (h *Handler) startCorrelation(st, et time.Time) error {
@@ -102,10 +96,7 @@ func (h *Handler) haltCorrelation(ht time.Time) error {
 		ht.Minute(),
 		ht.Second(),
 	)
-	if err := h.execCmd(msg); err != nil {
-		return err
-	}
-	return nil
+	return h.execCmd(msg)
 }
 
 func (h *Handler) execCmd(msg string) error {
@@ -114,10 +105,7 @@ func (h *Handler) execCmd(msg string) error {
 		return err
 	}
 	res := string(buf)
-	if err := h.classifyResult(res); err != nil {
-		return err
-	}
-	return nil
+	return h.classifyResult(res)
 }
 
 func (h *Handler) classifyResult(res string) error {
