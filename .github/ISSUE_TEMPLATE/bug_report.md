@@ -1,38 +1,36 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: "[BUG]"
+title: '[BUG]'
 labels: bug
 assignees: ''
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+## Overview
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+Please describe the bug clearly and concisely::
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+## Environments
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+Please note your environment and versions::
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+- OS: [e.g. macOS, Ubuntu]
+- Version [e.g. 1.1]
+- Go version [e.g. 1.12.2]
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+## To Reproduce
 
-**Additional context**
-Add any other context about the problem here.
+Please describe steps to reproduce the behavior below::
+
+## Reason to fix
+
+Please describe problems that occur if we don't fix::
+
+## Draft amendment
+
+Please describe a draft amendment if you have it::
+
+## Note
+
+Please note any other context about the feature request below::
