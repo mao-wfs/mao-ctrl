@@ -111,15 +111,15 @@ func (h *Handler) execCmd(msg string) error {
 func (h *Handler) classifyResult(res string) error {
 	resCode := h.extractResultCode(res)
 	switch resCode {
-	case resNotExecutable:
+	case resultNotExecutable:
 		return errNotExecutable
-	case resInvalidArgs:
+	case resultInvalidArgs:
 		return errInvalidArgs
-	case resUnknownError:
+	case resultUnknownError:
 		return errUnknown
-	case resConflict:
+	case resultConflict:
 		return errConflict
-	case resInvalidKwd:
+	case resultInvalidKwd:
 		return errInvaildKwd
 	default:
 		return nil

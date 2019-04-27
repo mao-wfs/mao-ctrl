@@ -6,14 +6,14 @@ import (
 
 // Result codes of the correlator operations.
 const (
-	resOK int = iota
-	resReset
-	resNotExecutable
-	resInvalidArgs
-	resUnknownError
+	resultOK int = iota
+	resultReset
+	resultNotExecutable
+	resultInvalidArgs
+	resultUnknownError
 	_
-	resConflict
-	resInvalidKwd
+	resultConflict
+	resultInvalidKwd
 )
 
 // Errors of the correlator operations.
