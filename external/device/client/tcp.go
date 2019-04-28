@@ -33,11 +33,11 @@ func (c *TCPClient) Write(msg string) error {
 // Read receive the message from a device.
 func (c *TCPClient) Read(bufSize int) ([]byte, error) {
 	buf := make([]byte, bufSize)
-	len, err := c.Conn.Read(buf)
+	bufLen, err := c.Conn.Read(buf)
 	if err != nil {
 		return nil, err
 	}
-	return buf[:len], nil
+	return buf[:bufLen], nil
 }
 
 // Query queries to a device.
