@@ -15,7 +15,7 @@ const defaultBufSize = 1024
 
 // Handler represents the FG handler of MAO-WFS.
 type Handler struct {
-	Conn *client.TCPClient
+	*client.TCPClient
 }
 
 // NewHandler returns a new FG handler.
@@ -26,7 +26,7 @@ func NewHandler(c config.FGConfig) (*Handler, error) {
 		return nil, err
 	}
 	h := &Handler{
-		Conn: clt,
+		TCPClient: clt,
 	}
 	return h, nil
 }
@@ -57,7 +57,7 @@ func (h *Handler) halt(ctx context.Context, ht time.Time) error {
 
 func (h *Handler) classifyResult() error {
 	msg := "SYST:ERR?\n"
-	buf, err := h.Conn.Query(msg, defaultBufSize)
+	buf, err := h.Query(msg, defaultBufSize)
 	if err != nil {
 		return err
 	}

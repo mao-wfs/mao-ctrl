@@ -17,7 +17,7 @@ const defaultBufSize = 1024
 
 // Handler represents the correlator handler of MAO-WFS.
 type Handler struct {
-	Conn *client.TCPClient
+	*client.TCPClient
 }
 
 // NewHandler returns a new correlator handler.
@@ -28,7 +28,7 @@ func NewHandler(c config.CorrelatorConfig) (*Handler, error) {
 		return nil, err
 	}
 	h := &Handler{
-		Conn: clt,
+		TCPClient: clt,
 	}
 	return h, nil
 }
@@ -100,7 +100,7 @@ func (h *Handler) haltCorrelation(ht time.Time) error {
 }
 
 func (h *Handler) execCmd(msg string) error {
-	buf, err := h.Conn.Query(msg, defaultBufSize)
+	buf, err := h.Query(msg, defaultBufSize)
 	if err != nil {
 		return err
 	}
