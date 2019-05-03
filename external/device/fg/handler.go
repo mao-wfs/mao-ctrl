@@ -55,6 +55,16 @@ func (h *Handler) halt(ctx context.Context, ht time.Time) error {
 	return nil
 }
 
+func (h *Handler) startOutput() error {
+	msg := "OUTP ON\n"
+	return h.execCmd(msg)
+}
+
+func (h *Handler) haltOutput() error {
+	msg := "OUTP OFF\n"
+	return h.execCmd(msg)
+}
+
 func (h *Handler) execCmd(msg string) error {
 	if err := h.Write(msg); err != nil {
 		return err
