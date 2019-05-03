@@ -55,6 +55,13 @@ func (h *Handler) halt(ctx context.Context, ht time.Time) error {
 	return nil
 }
 
+func (h *Handler) execCmd(msg string) error {
+	if err := h.Write(msg); err != nil {
+		return err
+	}
+	return h.classifyResult()
+}
+
 func (h *Handler) classifyResult() error {
 	msg := "SYST:ERR?\n"
 	buf, err := h.Query(msg, defaultBufSize)
