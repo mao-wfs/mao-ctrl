@@ -65,6 +65,11 @@ func (h *Handler) haltOutput() error {
 	return h.execCmd(msg)
 }
 
+func (h *Handler) enableDigPatt() error {
+	msg := "DIG:PATT ON\n"
+	return h.execCmd(msg)
+}
+
 func (h *Handler) execCmd(msg string) error {
 	if err := h.Write(msg); err != nil {
 		return err
