@@ -31,7 +31,7 @@ func NewHandler(c config.FGConfig) (*Handler, error) {
 	return h, nil
 }
 
-// Start starts the FG for the FG.
+// Start starts the FG for the correlator.
 func (h *Handler) Start(ctx context.Context, st, et time.Time) error {
 	if err := h.start(ctx, st, et); err != nil {
 		return xerrors.Errorf("error in start method: %w", err)
@@ -39,7 +39,7 @@ func (h *Handler) Start(ctx context.Context, st, et time.Time) error {
 	return nil
 }
 
-// Halt halts the FG for the FG.
+// Halt halts the FG for the correlator.
 func (h *Handler) Halt(ctx context.Context, ht time.Time) error {
 	if err := h.halt(ctx, ht); err != nil {
 		return xerrors.Errorf("error in halt method: %w", err)
