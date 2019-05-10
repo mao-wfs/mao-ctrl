@@ -6,7 +6,6 @@ import (
 
 	"github.com/mao-wfs/mao-ctrl/adapters/gateway/device"
 	"github.com/mao-wfs/mao-ctrl/adapters/presenter"
-	"github.com/mao-wfs/mao-ctrl/config"
 	"github.com/mao-wfs/mao-ctrl/usecases/interactor"
 	"github.com/mao-wfs/mao-ctrl/usecases/port"
 )
@@ -17,8 +16,8 @@ type WFSController struct {
 }
 
 // NewWFSController returns a new controller of MAO-WFS.
-func NewWFSController(conf config.Config, h *device.WFSHandler) *WFSController {
-	p := presenter.NewWFSPresenter(conf)
+func NewWFSController(h *device.WFSHandler) *WFSController {
+	p := presenter.NewWFSPresenter()
 	return &WFSController{
 		InputPort: interactor.NewWFSInteractor(h, p),
 	}

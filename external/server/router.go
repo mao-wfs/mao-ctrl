@@ -14,18 +14,12 @@ import (
 
 // Router is the router of MAO-WFS controller.
 type Router struct {
-	Config config.Config
 	*echo.Echo
 }
 
 func newRouter() (*Router, error) {
-	conf, err := config.LoadConfig()
-	if err != nil {
-		return nil, err
-	}
 	r := &Router{
-		Config: conf,
-		Echo:   echo.New(),
+		Echo: echo.New(),
 	}
 	return r, nil
 }
@@ -41,9 +35,11 @@ func Run() {
 }
 
 func (r *Router) run() {
-	apiConf := r.Config.GetAPIConfig()
-	addr := apiConf.GetAddr()
-	r.Logger.Fatal(r.Start(addr))
+	conf, err := config.LoadAPIConfig()
+	if err != nil {
+		r.Logger.Fatal(err)
+	}
+	r.Logger.Fatal(r.Start(conf.GetAddr()))
 }
 
 func (r *Router) initRouter() {
@@ -52,25 +48,19 @@ func (r *Router) initRouter() {
 		middleware.Recover(),
 	)
 
-	conf, err := config.LoadConfig()
+	corrHan, err := correlator.NewHandler()
 	if err != nil {
 		r.Logger.Fatal(err)
 	}
-
-	devConf := conf.GetDeviceConfig()
-	corrHan, err := correlator.NewHandler(devConf.GetCorrelatorConfig())
+	fgHan, err := fg.NewHandler()
 	if err != nil {
 		r.Logger.Fatal(err)
 	}
-	fgHan, err := fg.NewHandler(devConf.GetFGConfig())
-	if err != nil {
-		r.Logger.Fatal(err)
-	}
-	wfsHan := device.NewWFSHandler(devConf, corrHan, fgHan)
+	wfsHan := device.NewWFSHandler(corrHan, fgHan)
 
 	api := r.Group("api")
 	{
-		ctrl := controller.NewWFSController(conf, wfsHan)
+		ctrl := controller.NewWFSController(wfsHan)
 		api.PUT("/start", handler.StartWFS(ctrl))
 		api.PUT("/halt", handler.HaltWFS(ctrl))
 	}

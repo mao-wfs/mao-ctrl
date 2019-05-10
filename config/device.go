@@ -8,22 +8,6 @@ import (
 	"github.com/kelseyhightower/envconfig"
 )
 
-// DeviceConfig represents the configure of MAO-WFS devices.
-type DeviceConfig struct {
-	Correlator CorrelatorConfig `toml:"correlator"`
-	FG         FGConfig         `toml:"fg"`
-}
-
-// GetCorrelatorConfig returns the correlator's configure.
-func (c *DeviceConfig) GetCorrelatorConfig() CorrelatorConfig {
-	return c.Correlator
-}
-
-// GetFGConfig returns the FG's configure.
-func (c *DeviceConfig) GetFGConfig() FGConfig {
-	return c.FG
-}
-
 // CorrelatorConfig represents the configure of the correlator.
 type CorrelatorConfig struct {
 	// Host is the correlator host.
