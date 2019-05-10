@@ -105,7 +105,7 @@ func (h *Handler) haltCorrelation(ht time.Time) error {
 }
 
 func (h *Handler) execCmd(msg string) error {
-	buf, err := h.Query(msg, defaultBufSize)
+	buf, err := h.Conn.Query(msg, defaultBufSize)
 	if err != nil {
 		return err
 	}

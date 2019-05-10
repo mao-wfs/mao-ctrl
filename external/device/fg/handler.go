@@ -76,7 +76,7 @@ func (h *Handler) enableDigPatt() error {
 }
 
 func (h *Handler) execCmd(msg string) error {
-	if err := h.Write(msg); err != nil {
+	if err := h.Conn.Write(msg); err != nil {
 		return err
 	}
 	return h.classifyResult()
@@ -84,7 +84,7 @@ func (h *Handler) execCmd(msg string) error {
 
 func (h *Handler) classifyResult() error {
 	msg := "SYST:ERR?\n"
-	buf, err := h.Query(msg, defaultBufSize)
+	buf, err := h.Conn.Query(msg, defaultBufSize)
 	if err != nil {
 		return err
 	}
