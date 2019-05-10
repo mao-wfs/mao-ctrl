@@ -20,7 +20,7 @@ func TestLoadCorrelatorConfig(t *testing.T) {
 	if got, want := conf.Host, "127.0.0.1"; got != want {
 		t.Fatalf("got %s, want %s", got, want)
 	}
-	if got, want := conf.Port, 5000; got != want {
+	if got, want := conf.Port, int16(5000); got != want {
 		t.Fatalf("got %d, want %d", got, want)
 	}
 }

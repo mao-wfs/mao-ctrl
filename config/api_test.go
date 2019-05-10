@@ -21,7 +21,7 @@ func TestLoadAPIConfig(t *testing.T) {
 	if got, want := conf.Host, "127.0.0.1"; got != want {
 		t.Fatalf("got %s, want %s", got, want)
 	}
-	if got, want := conf.Port, 3030; got != want {
+	if got, want := conf.Port, int16(3030); got != want {
 		t.Fatalf("got %d, want %d", got, want)
 	}
 }
@@ -41,7 +41,7 @@ func TestLoadAPIConfigPortDefault(t *testing.T) {
 	if got, want := conf.Host, "127.0.0.1"; got != want {
 		t.Fatalf("got %s, want %s", got, want)
 	}
-	if got, want := conf.Port, 3000; got != want {
+	if got, want := conf.Port, int16(3000); got != want {
 		t.Fatalf("got %d, want %d", got, want)
 	}
 }

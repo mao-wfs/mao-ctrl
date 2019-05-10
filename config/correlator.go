@@ -14,7 +14,7 @@ type CorrelatorConfig struct {
 	Host string `required:"true"`
 
 	// Port is the port number the correlator listen on.
-	Port int `required:"true"`
+	Port int16 `required:"true"`
 }
 
 // LoadCorrelatorConfig loads the correlator configuration from environment variables.
@@ -31,4 +31,3 @@ func (c *CorrelatorConfig) GetAddr() string {
 	addr := fmt.Sprintf("%s:%d", c.Host, c.Port)
 	return addr
 }
-

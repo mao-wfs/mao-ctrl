@@ -22,10 +22,10 @@ func TestLoadFGConfig(t *testing.T) {
 	if got, want := conf.Host, "127.0.0.1"; got != want {
 		t.Fatalf("got %s, want %s", got, want)
 	}
-	if got, want := conf.Port, 5000; got != want {
+	if got, want := conf.Port, int16(5000); got != want {
 		t.Fatalf("got %d, want %d", got, want)
 	}
-	if got, want := conf.Order, []int{10, 9, 13, 8, 0}; !reflect.DeepEqual(got, want) {
+	if got, want := conf.Order, []int16{10, 9, 13, 8, 0}; !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %d, want %d", got, want)
 	}
 }
@@ -46,10 +46,10 @@ func TestLoadFGConfigOrderDefault(t *testing.T) {
 	if got, want := conf.Host, "127.0.0.1"; got != want {
 		t.Fatalf("got %s, want %s", got, want)
 	}
-	if got, want := conf.Port, 5000; got != want {
+	if got, want := conf.Port, int16(5000); got != want {
 		t.Fatalf("got %d, want %d", got, want)
 	}
-	if got, want := conf.Order, []int{10, 9, 13, 8, 0, 80, 16, 32}; !reflect.DeepEqual(got, want) {
+	if got, want := conf.Order, []int16{10, 9, 13, 8, 0, 80, 16, 32}; !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %d, want %d", got, want)
 	}
 }
@@ -66,9 +66,9 @@ func TestFGConfig_GetAddr(t *testing.T) {
 
 func TestFGConfig_GetOrder(t *testing.T) {
 	conf := &FGConfig{
-		Order: []int{10, 9, 13, 8, 0, 80, 16, 32},
+		Order: []int16{10, 9, 13, 8, 0, 80, 16, 32},
 	}
-	if got, want := conf.GetOrder(), []int{10, 9, 13, 8, 0, 80, 16, 32}; !reflect.DeepEqual(got, want) {
+	if got, want := conf.GetOrder(), []int16{10, 9, 13, 8, 0, 80, 16, 32}; !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %d, want %d", got, want)
 	}
 }

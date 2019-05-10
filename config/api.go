@@ -14,7 +14,7 @@ type APIConfig struct {
 	Host string
 
 	// Port is the port number the API listen on.
-	Port int `default:"3000"`
+	Port int16 `default:"3000"`
 }
 
 // LoadAPIConfig loads the API configuration from environment variables.

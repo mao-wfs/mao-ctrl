@@ -14,10 +14,10 @@ type FGConfig struct {
 	Host string `required:"true"`
 
 	// Port is the port number the FG listen on.
-	Port int `required:"true"`
+	Port int16 `required:"true"`
 
 	// Order is the switching order.
-	Order []int `default:"10,9,13,8,0,80,16,32"`
+	Order []int16 `default:"10,9,13,8,0,80,16,32"`
 }
 
 // LoadFGConfig loads the FG configuration from environment variables.
@@ -36,6 +36,6 @@ func (c *FGConfig) GetAddr() string {
 }
 
 // GetOrder returns the FGing order.
-func (c *FGConfig) GetOrder() []int {
+func (c *FGConfig) GetOrder() []int16 {
 	return c.Order
 }
