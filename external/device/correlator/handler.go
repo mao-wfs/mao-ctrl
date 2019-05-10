@@ -17,18 +17,23 @@ const defaultBufSize = 1024
 
 // Handler represents the correlator handler of MAO-WFS.
 type Handler struct {
-	*client.TCPClient
+	Config *config.CorrelatorConfig
+	Conn   *client.TCPClient
 }
 
 // NewHandler returns a new correlator handler.
-func NewHandler(c config.CorrelatorConfig) (*Handler, error) {
-	addr := c.GetAddr()
-	clt, err := client.NewTCPClient(addr)
+func NewHandler() (*Handler, error) {
+	conf, err := config.LoadCorrelatorConfig()
+	if err != nil {
+		return nil, err
+	}
+	clt, err := client.NewTCPClient(conf.GetAddr())
 	if err != nil {
 		return nil, err
 	}
 	h := &Handler{
-		TCPClient: clt,
+		Config: conf,
+		Conn:   clt,
 	}
 	return h, nil
 }

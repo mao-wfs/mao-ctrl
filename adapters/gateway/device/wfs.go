@@ -5,21 +5,17 @@ import (
 	"time"
 
 	"golang.org/x/xerrors"
-
-	"github.com/mao-wfs/mao-ctrl/config"
 )
 
 // WFSHandler represents the handler of MAO-WFS.
 type WFSHandler struct {
-	Config     config.DeviceConfig
 	Correlator CorrelatorHandler
 	FG         FGHandler
 }
 
 // NewWFSHandler returns a new handler of MAO-WFS.
-func NewWFSHandler(conf config.DeviceConfig, corrHan CorrelatorHandler, fgHan FGHandler) *WFSHandler {
+func NewWFSHandler(corrHan CorrelatorHandler, fgHan FGHandler) *WFSHandler {
 	return &WFSHandler{
-		Config:     conf,
 		Correlator: corrHan,
 		FG:         fgHan,
 	}
