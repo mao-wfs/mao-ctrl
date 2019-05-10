@@ -4,6 +4,8 @@ import (
 	"net"
 )
 
+const dialTimeout = 3
+
 // TCPClient represents the TCP client.
 type TCPClient struct {
 	net.Conn
@@ -11,7 +13,10 @@ type TCPClient struct {
 
 // NewTCPClient returns a new TCP client.
 func NewTCPClient(addr string) (*TCPClient, error) {
-	conn, err := net.Dial("tcp", addr)
+	d := net.Dialer{
+		Timeout: dialTimeout,
+	}
+	conn, err := d.Dial("tcp", addr)
 	if err != nil {
 		return nil, err
 	}
