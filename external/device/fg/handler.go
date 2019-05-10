@@ -36,7 +36,7 @@ func NewHandler() (*Handler, error) {
 	return h, nil
 }
 
-// Start starts the FG for the FG.
+// Start starts the FG for the correlator.
 func (h *Handler) Start(ctx context.Context, st, et time.Time) error {
 	if err := h.start(ctx, st, et); err != nil {
 		return xerrors.Errorf("error in start method: %w", err)
@@ -44,7 +44,7 @@ func (h *Handler) Start(ctx context.Context, st, et time.Time) error {
 	return nil
 }
 
-// Halt halts the FG for the FG.
+// Halt halts the FG for the correlator.
 func (h *Handler) Halt(ctx context.Context, ht time.Time) error {
 	if err := h.halt(ctx, ht); err != nil {
 		return xerrors.Errorf("error in halt method: %w", err)
@@ -60,9 +60,31 @@ func (h *Handler) halt(ctx context.Context, ht time.Time) error {
 	return nil
 }
 
+func (h *Handler) startOutput() error {
+	msg := "OUTP ON\n"
+	return h.execCmd(msg)
+}
+
+func (h *Handler) haltOutput() error {
+	msg := "OUTP OFF\n"
+	return h.execCmd(msg)
+}
+
+func (h *Handler) enableDigPatt() error {
+	msg := "DIG:PATT ON\n"
+	return h.execCmd(msg)
+}
+
+func (h *Handler) execCmd(msg string) error {
+	if err := h.Write(msg); err != nil {
+		return err
+	}
+	return h.classifyResult()
+}
+
 func (h *Handler) classifyResult() error {
 	msg := "SYST:ERR?\n"
-	buf, err := h.Conn.Query(msg, defaultBufSize)
+	buf, err := h.Query(msg, defaultBufSize)
 	if err != nil {
 		return err
 	}
