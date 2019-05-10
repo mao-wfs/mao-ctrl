@@ -68,8 +68,7 @@ func (r *Router) initRouter() {
 	}
 	wfsHan := device.NewWFSHandler(devConf, corrHan, fgHan)
 
-	apiConf := conf.GetAPIConfig()
-	api := r.Group(apiConf.GetRootEndPoint())
+	api := r.Group("api")
 	{
 		ctrl := controller.NewWFSController(conf, wfsHan)
 		api.PUT("/start", handler.StartWFS(ctrl))
