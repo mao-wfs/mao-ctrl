@@ -2,13 +2,15 @@ package presenter
 
 import (
 	"context"
+	"time"
 
 	"github.com/mao-wfs/mao-ctrl/usecases/port"
 )
 
 // WFSPresenter represents the presenter of MAO-WFS.
-// TODO: Specify the presenter specifications.
-type WFSPresenter struct{}
+type WFSPresenter struct {
+	port.WFSOutputPort
+}
 
 // NewWFSPresenter returns a new presenter of MAO-WFS.
 // TODO: Specify the presenter specifications.
@@ -17,9 +19,9 @@ func NewWFSPresenter() *WFSPresenter {
 }
 
 // Start starts MAO-WFS.
-// TODO: Specify the presenter specifications.
-func (p *WFSPresenter) Start(ctx context.Context) (*port.StartWFSResponse, error) {
-	return nil, nil
+func (p *WFSPresenter) Start(ctx context.Context, stT time.Time, sensT time.Duration) (*port.StartWFSResponse, error) {
+	edT := stT.Add(sensT)
+	return port.NewStartWFSResponse(stT, edT), nil
 }
 
 // Halt halts MAO-WFS.

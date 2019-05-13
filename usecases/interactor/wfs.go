@@ -23,14 +23,12 @@ func NewWFSInteractor(h domain.WFSHandler, op port.WFSOutputPort) *WFSInteractor
 
 // Start starts MAO-WFS.
 func (i *WFSInteractor) Start(ctx context.Context, req *port.StartWFSRequest) (*port.StartWFSResponse, error) {
-	st := req.GetStartTime()
-	et := req.GetEndTime()
-	if err := i.Handler.Start(ctx, st, et); err != nil {
+	sensT := req.GetSensingTime()
+	stT, err := i.Handler.Start(ctx, sensT)
+	if err != nil {
 		return nil, err
 	}
-
-	// TODO: Specify the presenter specifications.
-	return i.OutputPort.Start(ctx)
+	return i.OutputPort.Start(ctx, stT, sensT)
 }
 
 // Halt halts MAO-WFS.

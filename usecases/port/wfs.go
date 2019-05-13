@@ -9,6 +9,7 @@ import (
 type WFSInputPort interface {
 	// Start starts MAO-WFS.
 	Start(ctx context.Context, req *StartWFSRequest) (*StartWFSResponse, error)
+
 	// HaltWFS halts MAO-WFS.
 	Halt(ctx context.Context, req *HaltWFSRequest) (*HaltWFSResponse, error)
 }
@@ -17,25 +18,20 @@ type WFSInputPort interface {
 // TODO: Specify the presenter specifications.
 type WFSOutputPort interface {
 	// StartWFS starts MAO-WFS.
-	Start(ctx context.Context) (*StartWFSResponse, error)
+	Start(ctx context.Context, stT time.Time, sensT time.Duration) (*StartWFSResponse, error)
+
 	// HaltWFS halts MAO-WFS.
 	Halt(ctx context.Context) (*HaltWFSResponse, error)
 }
 
 // StartWFSRequest represents a request parameters to start MAO-WFS.
 type StartWFSRequest struct {
-	StartTime time.Time
-	EndTime   time.Time
+	SensingTime time.Duration
 }
 
-// GetStartTime returns the time to start MAO-WFS.
-func (req *StartWFSRequest) GetStartTime() time.Time {
-	return req.StartTime
-}
-
-// GetEndTime returns the time to halt MAO-WFS.
-func (req *StartWFSRequest) GetEndTime() time.Time {
-	return req.EndTime
+// GetSensingTime returns the time MAO-WFS senses.
+func (req *StartWFSRequest) GetSensingTime() time.Duration {
+	return req.SensingTime
 }
 
 // HaltWFSRequest represents a request parameters to halt MAO-WFS.
@@ -48,9 +44,19 @@ func (req *HaltWFSRequest) GetHaltTime() time.Time {
 	return req.HaltTime
 }
 
-// StartWFSResponse represents a response parameters of starting MAO-WFS.
-// TODO: Specify the presenter specifications.
-type StartWFSResponse struct{}
+// StartWFSResponse represents a response parameters after starting MAO-WFS.
+type StartWFSResponse struct {
+	StartTime time.Time
+	EndTime   time.Time
+}
+
+// NewStartWFSResponse returns a response after starting MAO-WFS.
+func NewStartWFSResponse(stT, edT time.Time) *StartWFSResponse {
+	return &StartWFSResponse{
+		StartTime: stT,
+		EndTime:   edT,
+	}
+}
 
 // HaltWFSResponse represents a response parameters of halting MAO-WFS.
 // TODO: Specify the presenter specifications.
