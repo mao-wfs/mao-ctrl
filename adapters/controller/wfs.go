@@ -44,17 +44,12 @@ func (ctrl *WFSController) Start(c Context) error {
 
 // Halt halts MAO-WFS.
 func (ctrl *WFSController) Halt(c Context) error {
-	req := new(port.HaltWFSRequest)
-	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, err)
-	}
-
 	ctx := c.Request().Context()
 	if ctx == nil {
 		ctx = context.Background()
 	}
 
-	res, err := ctrl.InputPort.Halt(ctx, req)
+	res, err := ctrl.InputPort.Halt(ctx)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
