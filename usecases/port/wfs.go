@@ -34,16 +34,6 @@ func (req *StartWFSRequest) GetSensingTime() time.Duration {
 	return req.SensingTime
 }
 
-// HaltWFSRequest represents a request parameters to halt MAO-WFS.
-type HaltWFSRequest struct {
-	HaltTime time.Time
-}
-
-// GetHaltTime returns the time to halt MAO-WFS.
-func (req *HaltWFSRequest) GetHaltTime() time.Time {
-	return req.HaltTime
-}
-
 // StartWFSResponse represents a response parameters after starting MAO-WFS.
 type StartWFSResponse struct {
 	StartTime time.Time
@@ -56,6 +46,16 @@ func NewStartWFSResponse(stT, edT time.Time) *StartWFSResponse {
 		StartTime: stT,
 		EndTime:   edT,
 	}
+}
+
+// HaltWFSRequest represents a request parameters to halt MAO-WFS.
+type HaltWFSRequest struct {
+	HaltTime time.Time
+}
+
+// GetHaltTime returns the time to halt MAO-WFS.
+func (req *HaltWFSRequest) GetHaltTime() time.Time {
+	return req.HaltTime
 }
 
 // HaltWFSResponse represents a response parameters of halting MAO-WFS.
