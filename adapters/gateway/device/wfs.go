@@ -3,8 +3,6 @@ package device
 import (
 	"context"
 	"time"
-
-	"golang.org/x/xerrors"
 )
 
 // WFSHandler represents the handler of MAO-WFS.
@@ -29,12 +27,8 @@ func (h *WFSHandler) Start(ctx context.Context, sensT time.Duration) (time.Time,
 }
 
 // Halt halts MAO-WFS.
-func (h *WFSHandler) Halt(ctx context.Context, haltTime time.Time) error {
-	if err := h.Correlator.Halt(ctx, haltTime); err != nil {
-		return xerrors.Errorf("error in correlator: %w", err)
-	}
-	if err := h.FG.Halt(ctx, haltTime); err != nil {
-		return xerrors.Errorf("error in switch: %w", err)
-	}
-	return nil
+// TODO: Implement a function to halt the correlator and the FG
+func (h *WFSHandler) Halt(ctx context.Context) (time.Time, error) {
+	now := time.Now()
+	return now, nil
 }

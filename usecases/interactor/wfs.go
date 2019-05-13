@@ -32,12 +32,10 @@ func (i *WFSInteractor) Start(ctx context.Context, req *port.StartWFSRequest) (*
 }
 
 // Halt halts MAO-WFS.
-func (i *WFSInteractor) Halt(ctx context.Context, req *port.HaltWFSRequest) (*port.HaltWFSResponse, error) {
-	ht := req.GetHaltTime()
-	if err := i.Handler.Halt(ctx, ht); err != nil {
+func (i *WFSInteractor) Halt(ctx context.Context) (*port.HaltWFSResponse, error) {
+	hltT, err := i.Handler.Halt(ctx)
+	if err != nil {
 		return nil, err
 	}
-
-	// TODO: Specify the presenter specifications.
-	return i.OutputPort.Halt(ctx)
+	return i.OutputPort.Halt(ctx, hltT)
 }

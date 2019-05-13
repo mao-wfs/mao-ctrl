@@ -11,6 +11,6 @@ type WFSHandler interface {
 	// It senses for the specified time.
 	Start(ctx context.Context, sensT time.Duration) (time.Time, error)
 
-	// Halt halts MAO-WFS.
-	Halt(ctx context.Context, ht time.Time) error
+	// Halt halts MAO-WFS immediately.
+	Halt(ctx context.Context) (time.Time, error)
 }

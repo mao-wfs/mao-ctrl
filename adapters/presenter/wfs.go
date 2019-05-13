@@ -25,7 +25,6 @@ func (p *WFSPresenter) Start(ctx context.Context, stT time.Time, sensT time.Dura
 }
 
 // Halt halts MAO-WFS.
-// TODO: Specify the presenter specifications.
-func (p *WFSPresenter) Halt(ctx context.Context) (*port.HaltWFSResponse, error) {
-	return nil, nil
+func (p *WFSPresenter) Halt(ctx context.Context, hltT time.Time) (*port.HaltWFSResponse, error) {
+	return port.NewHaltWFSResponse(hltT), nil
 }

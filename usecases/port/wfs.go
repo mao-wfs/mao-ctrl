@@ -11,7 +11,7 @@ type WFSInputPort interface {
 	Start(ctx context.Context, req *StartWFSRequest) (*StartWFSResponse, error)
 
 	// HaltWFS halts MAO-WFS.
-	Halt(ctx context.Context, req *HaltWFSRequest) (*HaltWFSResponse, error)
+	Halt(ctx context.Context) (*HaltWFSResponse, error)
 }
 
 // WFSOutputPort is the interface that describe the output port of MAO-WFS controller.
@@ -21,7 +21,7 @@ type WFSOutputPort interface {
 	Start(ctx context.Context, stT time.Time, sensT time.Duration) (*StartWFSResponse, error)
 
 	// HaltWFS halts MAO-WFS.
-	Halt(ctx context.Context) (*HaltWFSResponse, error)
+	Halt(ctx context.Context, hltT time.Time) (*HaltWFSResponse, error)
 }
 
 // StartWFSRequest represents a request parameters to start MAO-WFS.
@@ -48,16 +48,14 @@ func NewStartWFSResponse(stT, edT time.Time) *StartWFSResponse {
 	}
 }
 
-// HaltWFSRequest represents a request parameters to halt MAO-WFS.
-type HaltWFSRequest struct {
+// HaltWFSResponse represents a response parameters after halting MAO-WFS.
+type HaltWFSResponse struct {
 	HaltTime time.Time
 }
 
-// GetHaltTime returns the time to halt MAO-WFS.
-func (req *HaltWFSRequest) GetHaltTime() time.Time {
-	return req.HaltTime
+// NewHaltWFSResponse returns a response parameters after halting MAO-WFS.
+func NewHaltWFSResponse(hltT time.Time) *HaltWFSResponse {
+	return &HaltWFSResponse{
+		HaltTime: hltT,
+	}
 }
-
-// HaltWFSResponse represents a response parameters of halting MAO-WFS.
-// TODO: Specify the presenter specifications.
-type HaltWFSResponse struct{}
