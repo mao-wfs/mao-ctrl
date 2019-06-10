@@ -2,33 +2,39 @@ package device
 
 import (
 	"context"
-	"time"
+
+	"golang.org/x/xerrors"
+
+	"github.com/mao-wfs/mao-ctrl/domain"
 )
 
-// WFSHandler represents the handler of MAO-WFS.
-type WFSHandler struct {
-	Correlator CorrelatorHandler
-	FG         FGHandler
+// wfsHandler represents the handler of MAO-WFS.
+type wfsHandler struct {
+	correlator CorrelatorHandler
+	fg         FGHandler
 }
 
 // NewWFSHandler returns a new handler of MAO-WFS.
-func NewWFSHandler(corrHan CorrelatorHandler, fgHan FGHandler) *WFSHandler {
-	return &WFSHandler{
-		Correlator: corrHan,
-		FG:         fgHan,
+func NewWFSHandler(corr CorrelatorHandler, fg FGHandler) domain.WFSHandler {
+	return &wfsHandler{
+		correlator: corr,
+		fg:         fg,
 	}
 }
 
 // Start starts MAO-WFS.
 // TODO: Implement a function to start the correlator and the FG synchronization
-func (h *WFSHandler) Start(ctx context.Context, sensT time.Duration) (time.Time, error) {
-	var t time.Time
-	return t, nil
+func (h *wfsHandler) Start(ctx context.Context) error {
+	return nil
 }
 
 // Halt halts MAO-WFS.
-// TODO: Implement a function to halt the correlator and the FG
-func (h *WFSHandler) Halt(ctx context.Context) (time.Time, error) {
-	now := time.Now()
-	return now, nil
+func (h *wfsHandler) Halt(ctx context.Context) error {
+	if err := h.correlator.Halt(ctx); err != nil {
+		return xerrors.Errorf("failed to halt the correlator: %w", err)
+	}
+	if err := h.fg.Halt(ctx); err != nil {
+		return xerrors.Errorf("failed to halt the FG: %w", err)
+	}
+	return nil
 }

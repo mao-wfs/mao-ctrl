@@ -9,6 +9,7 @@ import (
 
 	"golang.org/x/xerrors"
 
+	"github.com/mao-wfs/mao-ctrl/adapters/gateway/device"
 	"github.com/mao-wfs/mao-ctrl/config"
 	"github.com/mao-wfs/mao-ctrl/external/device/client"
 )
@@ -17,12 +18,12 @@ const defaultBufSize = 1024
 
 // Handler represents the correlator handler of MAO-WFS.
 type Handler struct {
-	Config *config.CorrelatorConfig
-	Conn   *client.TCPClient
+	config *config.CorrelatorConfig
+	conn   *client.TCPClient
 }
 
 // NewHandler returns a new correlator handler.
-func NewHandler() (*Handler, error) {
+func NewHandler() (device.CorrelatorHandler, error) {
 	conf, err := config.LoadCorrelatorConfig()
 	if err != nil {
 		return nil, err
@@ -32,38 +33,44 @@ func NewHandler() (*Handler, error) {
 		return nil, err
 	}
 	h := &Handler{
-		Config: conf,
-		Conn:   clt,
+		config: conf,
+		conn:   clt,
 	}
 	return h, nil
 }
 
 // Start starts the correlator of MAO-WFS.
-func (h *Handler) Start(ctx context.Context, st, et time.Time) error {
-	if err := h.start(ctx, st, et); err != nil {
+func (h *Handler) Start(ctx context.Context) error {
+	if err := h.start(ctx); err != nil {
 		return xerrors.Errorf("error in start method: %w", err)
 	}
 	return nil
 }
 
 // Halt halts the correlator of MAO-WFS.
-func (h *Handler) Halt(ctx context.Context, ht time.Time) error {
-	if err := h.halt(ctx, ht); err != nil {
+func (h *Handler) Halt(ctx context.Context) error {
+	if err := h.halt(ctx); err != nil {
 		return xerrors.Errorf("error in halt method: %w", err)
 	}
 	return nil
 }
 
-func (h *Handler) start(ctx context.Context, st, et time.Time) error {
-	return h.startCorrelation(st, et)
+// Initialize initializes the correlator of MAO-WFS.
+func (h *Handler) Initialize(ctx context.Context) error {
+	return nil
 }
 
-func (h *Handler) halt(ctx context.Context, ht time.Time) error {
-	return h.haltCorrelation(ht)
+func (h *Handler) start(ctx context.Context) error {
+	return h.startCorrelation()
 }
 
-func (h *Handler) startCorrelation(st, et time.Time) error {
-	stMsg := fmt.Sprintf(
+func (h *Handler) halt(ctx context.Context) error {
+	return h.haltCorrelation()
+}
+
+func (h *Handler) startCorrelation() error {
+	var st time.Time
+	msg := fmt.Sprintf(
 		"ctl_corstart=%04d%03d%02d%02d%02d:0x10;",
 		st.Year(),
 		st.YearDay(),
@@ -71,28 +78,11 @@ func (h *Handler) startCorrelation(st, et time.Time) error {
 		st.Minute(),
 		st.Second(),
 	)
-	if err := h.execCmd(stMsg); err != nil {
-		return err
-	}
-
-	if !et.IsZero() || et.Before(st) {
-		edMsg := fmt.Sprintf(
-			"ctl_corstop=%04d%03d%02d%02d%02d;",
-			et.Year(),
-			et.YearDay(),
-			et.Hour(),
-			et.Minute(),
-			et.Second(),
-		)
-		if err := h.execCmd(edMsg); err != nil {
-			return err
-		}
-	}
-
-	return nil
+	return h.execCmd(msg)
 }
 
-func (h *Handler) haltCorrelation(ht time.Time) error {
+func (h *Handler) haltCorrelation() error {
+	var ht time.Time
 	msg := fmt.Sprintf(
 		"ctl_corstop=%04d%03d%02d%02d%02d;",
 		ht.Year(),
@@ -105,7 +95,7 @@ func (h *Handler) haltCorrelation(ht time.Time) error {
 }
 
 func (h *Handler) execCmd(msg string) error {
-	buf, err := h.Conn.Query(msg, defaultBufSize)
+	buf, err := h.conn.Query(msg, defaultBufSize)
 	if err != nil {
 		return err
 	}

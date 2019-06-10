@@ -3,10 +3,10 @@ package fg
 import (
 	"context"
 	"strings"
-	"time"
 
 	"golang.org/x/xerrors"
 
+	"github.com/mao-wfs/mao-ctrl/adapters/gateway/device"
 	"github.com/mao-wfs/mao-ctrl/config"
 	"github.com/mao-wfs/mao-ctrl/external/device/client"
 )
@@ -15,12 +15,12 @@ const defaultBufSize = 1024
 
 // Handler represents the FG handler of MAO-WFS.
 type Handler struct {
-	Config *config.FGConfig
-	Conn   *client.TCPClient
+	config *config.FGConfig
+	conn   *client.TCPClient
 }
 
 // NewHandler returns a new FG handler.
-func NewHandler() (*Handler, error) {
+func NewHandler() (device.FGHandler, error) {
 	conf, err := config.LoadFGConfig()
 	if err != nil {
 		return nil, err
@@ -30,33 +30,40 @@ func NewHandler() (*Handler, error) {
 		return nil, err
 	}
 	h := &Handler{
-		Config: conf,
-		Conn:   clt,
+		config: conf,
+		conn:   clt,
 	}
 	return h, nil
 }
 
-// Start starts the FG for the correlator.
-func (h *Handler) Start(ctx context.Context, st, et time.Time) error {
-	if err := h.start(ctx, st, et); err != nil {
+// Start starts the FG of MAO-WFS.
+func (h *Handler) Start(ctx context.Context) error {
+	if err := h.start(ctx); err != nil {
 		return xerrors.Errorf("error in start method: %w", err)
 	}
 	return nil
 }
 
-// Halt halts the FG for the correlator.
-func (h *Handler) Halt(ctx context.Context, ht time.Time) error {
-	if err := h.halt(ctx, ht); err != nil {
+// Halt halts the FG of MAO-WFS.
+func (h *Handler) Halt(ctx context.Context) error {
+	if err := h.halt(ctx); err != nil {
 		return xerrors.Errorf("error in halt method: %w", err)
 	}
 	return nil
 }
 
-func (h *Handler) start(ctx context.Context, st, et time.Time) error {
+// Initialize initializes the FG of the MAO-WFS.
+func (h *Handler) Initialize(ctx context.Context) error {
 	return nil
 }
 
-func (h *Handler) halt(ctx context.Context, ht time.Time) error {
+// TODO: Implement
+func (h *Handler) start(ctx context.Context) error {
+	return nil
+}
+
+// TODO: Implement
+func (h *Handler) halt(ctx context.Context) error {
 	return nil
 }
 
@@ -76,7 +83,7 @@ func (h *Handler) enableDigPatt() error {
 }
 
 func (h *Handler) execCmd(msg string) error {
-	if err := h.Conn.Write(msg); err != nil {
+	if err := h.conn.Write(msg); err != nil {
 		return err
 	}
 	return h.classifyResult()
@@ -84,7 +91,7 @@ func (h *Handler) execCmd(msg string) error {
 
 func (h *Handler) classifyResult() error {
 	msg := "SYST:ERR?\n"
-	buf, err := h.Conn.Query(msg, defaultBufSize)
+	buf, err := h.conn.Query(msg, defaultBufSize)
 	if err != nil {
 		return err
 	}

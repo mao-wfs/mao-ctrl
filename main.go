@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/mao-wfs/mao-ctrl/external/server"
+	"github.com/mao-wfs/mao-ctrl/external/api"
 )
 
 func main() {
-	server.Run()
+	api.Run()
 }

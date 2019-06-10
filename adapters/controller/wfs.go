@@ -4,54 +4,50 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/mao-wfs/mao-ctrl/adapters/gateway/device"
-	"github.com/mao-wfs/mao-ctrl/adapters/presenter"
-	"github.com/mao-wfs/mao-ctrl/usecases/interactor"
-	"github.com/mao-wfs/mao-ctrl/usecases/port"
+	"github.com/mao-wfs/mao-ctrl/usecases/input"
 )
 
+// WFSController is the interface that describe the controller of MAO-WFS.
+type WFSController interface {
+	// Start starts MAO-WFS.
+	Start(c Context) error
+
+	// Halt halts MAO-WFS.
+	Halt(c Context) error
+}
+
 // WFSController represents the controller of MAO-WFS.
-type WFSController struct {
-	InputPort port.WFSInputPort
+type wfsController struct {
+	inputPort input.WFSInputPort
 }
 
 // NewWFSController returns a new controller of MAO-WFS.
-func NewWFSController(h *device.WFSHandler) *WFSController {
-	p := presenter.NewWFSPresenter()
-	return &WFSController{
-		InputPort: interactor.NewWFSInteractor(h, p),
+func NewWFSController(ipt input.WFSInputPort) WFSController {
+	return &wfsController{
+		inputPort: ipt,
 	}
 }
 
-// Start starts MAO-WFS.
-func (ctrl *WFSController) Start(c Context) error {
-	req := new(port.StartWFSRequest)
-	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, err)
-	}
-
+func (ctrl *wfsController) Start(c Context) error {
 	ctx := c.Request().Context()
 	if ctx == nil {
 		ctx = context.Background()
 	}
 
-	res, err := ctrl.InputPort.Start(ctx, req)
-	if err != nil {
+	if err := ctrl.inputPort.Start(ctx); err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
 	}
-	return c.JSON(http.StatusOK, res)
+	return c.JSON(http.StatusOK, "MAO-WFS started!")
 }
 
-// Halt halts MAO-WFS.
-func (ctrl *WFSController) Halt(c Context) error {
+func (ctrl *wfsController) Halt(c Context) error {
 	ctx := c.Request().Context()
 	if ctx == nil {
 		ctx = context.Background()
 	}
 
-	res, err := ctrl.InputPort.Halt(ctx)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
+	if err := ctrl.inputPort.Halt(ctx); err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
 	}
-	return c.JSON(http.StatusOK, res)
+	return c.JSON(http.StatusOK, "MAO-WFS stoped!")
 }
