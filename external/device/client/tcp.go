@@ -2,9 +2,10 @@ package client
 
 import (
 	"net"
+	"time"
 )
 
-const dialTimeout = 3
+const dialTimeout = 3 * time.Second
 
 // TCPClient represents the TCP client.
 type TCPClient struct {
