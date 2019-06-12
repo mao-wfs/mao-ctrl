@@ -40,12 +40,12 @@ func NewHandler() (device.FGHandler, error) {
 
 // Start starts the FG of MAO-WFS.
 func (h *Handler) Start(ctx context.Context) error {
-	return nil
+	return h.startOutput()
 }
 
 // Halt halts the FG of MAO-WFS.
 func (h *Handler) Halt(ctx context.Context) error {
-	return nil
+	return h.haltOutput()
 }
 
 // Initialize initializes the FG of the MAO-WFS.
