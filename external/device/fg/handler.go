@@ -61,7 +61,7 @@ func (h *Handler) haltOutput() error {
 	return h.execCmd(msg)
 }
 
-func (h *Handler) enableDigPatt() error {
+func (h *Handler) enableDigitalPattern() error {
 	msg := "DIG:PATT ON\n"
 	return h.execCmd(msg)
 }
