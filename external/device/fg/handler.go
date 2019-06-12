@@ -2,6 +2,8 @@ package fg
 
 import (
 	"context"
+	"fmt"
+	"strconv"
 	"strings"
 
 	"golang.org/x/xerrors"
@@ -48,7 +50,21 @@ func (h *Handler) Halt(ctx context.Context) error {
 
 // Initialize initializes the FG of the MAO-WFS.
 func (h *Handler) Initialize(ctx context.Context) error {
-	return nil
+	if err := h.enableDigitalPattern(); err != nil {
+		return err
+	}
+
+	if err := h.setFuncPatternVolatile(); err != nil {
+		return err
+	}
+	if err := h.setDigitalPattern(); err != nil {
+		return err
+	}
+
+	if err := h.setDigitalPatternTrigerSlopePositive(); err != nil {
+		return err
+	}
+	return h.setDigitalPatternTrigerSourceExternal()
 }
 
 func (h *Handler) startOutput() error {
@@ -63,6 +79,32 @@ func (h *Handler) haltOutput() error {
 
 func (h *Handler) enableDigitalPattern() error {
 	msg := "DIG:PATT ON\n"
+	return h.execCmd(msg)
+}
+
+func (h *Handler) setDigitalPatternTrigerSourceExternal() error {
+	msg := "DIG:PATT:TRIG:SOUR EXT"
+	return h.execCmd(msg)
+}
+
+func (h *Handler) setDigitalPatternTrigerSlopePositive() error {
+	msg := "DIG:PATT:TRIG:SLOP POS"
+	return h.execCmd(msg)
+}
+
+func (h *Handler) setFuncPatternVolatile() error {
+	msg := "FUNC:PATT VOLATILE"
+	return h.execCmd(msg)
+}
+
+func (h *Handler) setDigitalPattern() error {
+	o := h.config.GetOrder()
+	oStr := make([]string, len(o))
+	for i, v := range o {
+		oStr[i] = strconv.Itoa(int(v))
+	}
+	msgPatt := strings.Join(oStr, ", ")
+	msg := fmt.Sprintf("DATA:PATTERN VOLATILE, %s", msgPatt)
 	return h.execCmd(msg)
 }
 
