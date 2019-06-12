@@ -38,32 +38,16 @@ func NewHandler() (device.FGHandler, error) {
 
 // Start starts the FG of MAO-WFS.
 func (h *Handler) Start(ctx context.Context) error {
-	if err := h.start(ctx); err != nil {
-		return xerrors.Errorf("error in start method: %w", err)
-	}
 	return nil
 }
 
 // Halt halts the FG of MAO-WFS.
 func (h *Handler) Halt(ctx context.Context) error {
-	if err := h.halt(ctx); err != nil {
-		return xerrors.Errorf("error in halt method: %w", err)
-	}
 	return nil
 }
 
 // Initialize initializes the FG of the MAO-WFS.
 func (h *Handler) Initialize(ctx context.Context) error {
-	return nil
-}
-
-// TODO: Implement
-func (h *Handler) start(ctx context.Context) error {
-	return nil
-}
-
-// TODO: Implement
-func (h *Handler) halt(ctx context.Context) error {
 	return nil
 }
 

@@ -7,8 +7,6 @@ import (
 	"strconv"
 	"time"
 
-	"golang.org/x/xerrors"
-
 	"github.com/mao-wfs/mao-ctrl/adapters/gateway/device"
 	"github.com/mao-wfs/mao-ctrl/config"
 	"github.com/mao-wfs/mao-ctrl/external/device/client"
@@ -41,31 +39,17 @@ func NewHandler() (device.CorrelatorHandler, error) {
 
 // Start starts the correlator of MAO-WFS.
 func (h *Handler) Start(ctx context.Context) error {
-	if err := h.start(ctx); err != nil {
-		return xerrors.Errorf("error in start method: %w", err)
-	}
-	return nil
+	return h.startCorrelation()
 }
 
 // Halt halts the correlator of MAO-WFS.
 func (h *Handler) Halt(ctx context.Context) error {
-	if err := h.halt(ctx); err != nil {
-		return xerrors.Errorf("error in halt method: %w", err)
-	}
-	return nil
+	return h.haltCorrelation()
 }
 
 // Initialize initializes the correlator of MAO-WFS.
 func (h *Handler) Initialize(ctx context.Context) error {
 	return nil
-}
-
-func (h *Handler) start(ctx context.Context) error {
-	return h.startCorrelation()
-}
-
-func (h *Handler) halt(ctx context.Context) error {
-	return h.haltCorrelation()
 }
 
 func (h *Handler) startCorrelation() error {
