@@ -55,7 +55,7 @@ func (h *Handler) Initialize(ctx context.Context) error {
 func (h *Handler) startCorrelation() error {
 	var st time.Time
 	msg := fmt.Sprintf(
-		"ctl_corstart=%04dy%03dd%02dh%02dm%02ds:0x10;",
+		"ctl_corstart=%04dy%03dd%02dh%02dm%02ds:0x10",
 		st.Year(),
 		st.YearDay(),
 		st.Hour(),
@@ -68,7 +68,7 @@ func (h *Handler) startCorrelation() error {
 func (h *Handler) haltCorrelation() error {
 	var ht time.Time
 	msg := fmt.Sprintf(
-		"ctl_corstop=%04dy%03dd%02dh%02dm%02ds;",
+		"ctl_corstop=%04dy%03dd%02dh%02dm%02ds",
 		ht.Year(),
 		ht.YearDay(),
 		ht.Hour(),
@@ -79,7 +79,7 @@ func (h *Handler) haltCorrelation() error {
 }
 
 func (h *Handler) execCmd(msg string) error {
-	buf, err := h.conn.Query(msg, defaultBufSize)
+	buf, err := h.conn.Query(msg + ";", defaultBufSize)
 	if err != nil {
 		return err
 	}

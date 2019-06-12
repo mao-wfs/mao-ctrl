@@ -68,17 +68,17 @@ func (h *Handler) Initialize(ctx context.Context) error {
 }
 
 func (h *Handler) startOutput() error {
-	msg := "OUTP ON\n"
+	msg := "OUTP ON"
 	return h.execCmd(msg)
 }
 
 func (h *Handler) haltOutput() error {
-	msg := "OUTP OFF\n"
+	msg := "OUTP OFF"
 	return h.execCmd(msg)
 }
 
 func (h *Handler) enableDigitalPattern() error {
-	msg := "DIG:PATT ON\n"
+	msg := "DIG:PATT ON"
 	return h.execCmd(msg)
 }
 
@@ -109,15 +109,15 @@ func (h *Handler) setDigitalPattern() error {
 }
 
 func (h *Handler) execCmd(msg string) error {
-	if err := h.conn.Write(msg); err != nil {
+	if err := h.conn.Write(msg + "\n"); err != nil {
 		return err
 	}
 	return h.classifyResult()
 }
 
 func (h *Handler) classifyResult() error {
-	msg := "SYST:ERR?\n"
-	buf, err := h.conn.Query(msg, defaultBufSize)
+	msg := "SYST:ERR?"
+	buf, err := h.conn.Query(msg + "\n", defaultBufSize)
 	if err != nil {
 		return err
 	}
