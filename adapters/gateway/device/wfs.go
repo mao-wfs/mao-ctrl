@@ -2,6 +2,7 @@ package device
 
 import (
 	"context"
+	"sync"
 
 	"golang.org/x/xerrors"
 
@@ -23,8 +24,48 @@ func NewWFSHandler(corr CorrelatorHandler, fg FGHandler) domain.WFSHandler {
 }
 
 // Start starts MAO-WFS.
-// TODO: Implement a function to start the correlator and the FG synchronization
 func (h *wfsHandler) Start(ctx context.Context) error {
+	if err := h.correlator.Initialize(ctx); err != nil {
+		return xerrors.Errorf("failed to initialize the correlator: %w", err)
+	}
+	if err := h.fg.Initialize(ctx); err != nil {
+		return xerrors.Errorf("failed to initialize the FG: %w", err)
+	}
+
+	corrCh := make(chan error)
+	fgCh := make(chan error)
+
+	wg := new(sync.WaitGroup)
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		defer close(corrCh)
+		corrCh <- h.correlator.Start(ctx)
+	}()
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		defer close(fgCh)
+		fgCh <- h.fg.Start(ctx)
+	}()
+	wg.Wait()
+
+	// TODO: Fix error handlings
+	errs := make([]error, 2)
+	select {
+	case err := <-corrCh:
+		if err != nil {
+			errs = append(errs, err)
+		}
+	case err := <-fgCh:
+		if err != nil {
+			errs = append(errs, err)
+		}
+	}
+
+	if len(errs) != 0 {
+		return xerrors.Errorf("failed to start MAO-WFS: %+v", errs)
+	}
 	return nil
 }
 
