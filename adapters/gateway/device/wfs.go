@@ -42,7 +42,7 @@ func (h *wfsHandler) Start(ctx context.Context) error {
 		defer close(corrCh)
 		corrCh <- h.correlator.Start(ctx)
 	}()
-	wg.Add(1)
+	wg.Add(2)
 	go func() {
 		defer wg.Done()
 		defer close(fgCh)
