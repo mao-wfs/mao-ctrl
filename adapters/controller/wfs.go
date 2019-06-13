@@ -35,7 +35,7 @@ func (ctrl *wfsController) Start(c Context) error {
 	}
 
 	if err := ctrl.inputPort.Start(ctx); err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
+		return err
 	}
 	return c.JSON(http.StatusOK, "MAO-WFS started!")
 }
@@ -47,7 +47,7 @@ func (ctrl *wfsController) Halt(c Context) error {
 	}
 
 	if err := ctrl.inputPort.Halt(ctx); err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
+		return err
 	}
 	return c.JSON(http.StatusOK, "MAO-WFS stoped!")
 }
