@@ -44,8 +44,9 @@ func (h *wfsHandler) Start(ctx context.Context) error {
 	}()
 
 	// TODO: Refactor the error handling
-	if <-corrCh != nil || <-fgCh != nil {
-		return xerrors.Errorf("correlator: %+v, FG: %+v", <-corrCh, <-fgCh)
+	corrErr, fgErr := <-corrCh, <-fgCh
+	if corrErr != nil || fgErr != nil {
+		return xerrors.Errorf("correlator: %+v, FG: %+v", corrErr, fgErr)
 	}
 	return nil
 }
@@ -65,8 +66,9 @@ func (h *wfsHandler) Halt(ctx context.Context) error {
 	}()
 
 	// TODO: Refactor the error handling
-	if <-corrCh != nil || <-fgCh != nil {
-		return xerrors.Errorf("correlator: %+v, FG: %+v", <-corrCh, <-fgCh)
+	corrErr, fgErr := <-corrCh, <-fgCh
+	if corrErr != nil || fgErr != nil {
+		return xerrors.Errorf("correlator: %+v, FG: %+v", corrErr, fgErr)
 	}
 	return nil
 }
