@@ -52,11 +52,21 @@ func (h *wfsHandler) Start(ctx context.Context) error {
 
 // Halt halts MAO-WFS.
 func (h *wfsHandler) Halt(ctx context.Context) error {
-	if err := h.correlator.Halt(ctx); err != nil {
-		return xerrors.Errorf("failed to halt the correlator: %w", err)
-	}
-	if err := h.fg.Halt(ctx); err != nil {
-		return xerrors.Errorf("failed to halt the FG: %w", err)
+	corrCh := make(chan error)
+	fgCh := make(chan error)
+
+	go func() {
+		defer close(corrCh)
+		corrCh <- h.correlator.Halt(ctx)
+	}()
+	go func() {
+		defer close(fgCh)
+		fgCh <- h.fg.Halt(ctx)
+	}()
+
+	// TODO: Refactor the error handling
+	if <-corrCh != nil || <-fgCh != nil {
+		return xerrors.Errorf("correlator: %+v, FG: %+v", <-corrCh, <-fgCh)
 	}
 	return nil
 }
