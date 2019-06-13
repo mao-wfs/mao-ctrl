@@ -43,21 +43,9 @@ func (h *wfsHandler) Start(ctx context.Context) error {
 		fgCh <- h.fg.Start(ctx)
 	}()
 
-	// TODO: Fix error handlings
-	errs := make([]error, 2)
-	select {
-	case err := <-corrCh:
-		if err != nil {
-			errs = append(errs, err)
-		}
-	case err := <-fgCh:
-		if err != nil {
-			errs = append(errs, err)
-		}
-	}
-
-	if len(errs) != 0 {
-		return xerrors.Errorf("failed to start MAO-WFS: %+v", errs)
+	// TODO: Refactor the error handling
+	if <-corrCh != nil || <-fgCh != nil {
+		return xerrors.Errorf("correlator: %+v, FG: %+v", <-corrCh, <-fgCh)
 	}
 	return nil
 }
