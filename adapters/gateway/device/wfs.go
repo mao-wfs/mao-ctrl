@@ -2,7 +2,6 @@ package device
 
 import (
 	"context"
-	"sync"
 
 	"golang.org/x/xerrors"
 
@@ -35,20 +34,14 @@ func (h *wfsHandler) Start(ctx context.Context) error {
 	corrCh := make(chan error)
 	fgCh := make(chan error)
 
-	wg := new(sync.WaitGroup)
-	wg.Add(1)
 	go func() {
-		defer wg.Done()
 		defer close(corrCh)
 		corrCh <- h.correlator.Start(ctx)
 	}()
-	wg.Add(2)
 	go func() {
-		defer wg.Done()
 		defer close(fgCh)
 		fgCh <- h.fg.Start(ctx)
 	}()
-	wg.Wait()
 
 	// TODO: Fix error handlings
 	errs := make([]error, 2)
