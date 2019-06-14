@@ -2,6 +2,8 @@ package fg
 
 import (
 	"context"
+	"fmt"
+	"strconv"
 	"strings"
 
 	"golang.org/x/xerrors"
@@ -38,60 +40,84 @@ func NewHandler() (device.FGHandler, error) {
 
 // Start starts the FG of MAO-WFS.
 func (h *Handler) Start(ctx context.Context) error {
-	if err := h.start(ctx); err != nil {
-		return xerrors.Errorf("error in start method: %w", err)
-	}
-	return nil
+	return h.startOutput()
 }
 
 // Halt halts the FG of MAO-WFS.
 func (h *Handler) Halt(ctx context.Context) error {
-	if err := h.halt(ctx); err != nil {
-		return xerrors.Errorf("error in halt method: %w", err)
-	}
-	return nil
+	return h.haltOutput()
 }
 
 // Initialize initializes the FG of the MAO-WFS.
 func (h *Handler) Initialize(ctx context.Context) error {
-	return nil
-}
+	if err := h.enableDigitalPattern(); err != nil {
+		return err
+	}
 
-// TODO: Implement
-func (h *Handler) start(ctx context.Context) error {
-	return nil
-}
+	if err := h.setFuncPatternVolatile(); err != nil {
+		return err
+	}
+	if err := h.setDigitalPattern(); err != nil {
+		return err
+	}
 
-// TODO: Implement
-func (h *Handler) halt(ctx context.Context) error {
-	return nil
+	if err := h.setDigitalPatternTrigerSlopePositive(); err != nil {
+		return err
+	}
+	return h.setDigitalPatternTrigerSourceExternal()
 }
 
 func (h *Handler) startOutput() error {
-	msg := "OUTP ON\n"
+	msg := "OUTP ON"
 	return h.execCmd(msg)
 }
 
 func (h *Handler) haltOutput() error {
-	msg := "OUTP OFF\n"
+	msg := "OUTP OFF"
 	return h.execCmd(msg)
 }
 
-func (h *Handler) enableDigPatt() error {
-	msg := "DIG:PATT ON\n"
+func (h *Handler) enableDigitalPattern() error {
+	msg := "DIG:PATT ON"
+	return h.execCmd(msg)
+}
+
+func (h *Handler) setDigitalPatternTrigerSourceExternal() error {
+	msg := "DIG:PATT:TRIG:SOUR EXT"
+	return h.execCmd(msg)
+}
+
+func (h *Handler) setDigitalPatternTrigerSlopePositive() error {
+	msg := "DIG:PATT:TRIG:SLOP POS"
+	return h.execCmd(msg)
+}
+
+func (h *Handler) setFuncPatternVolatile() error {
+	msg := "FUNC:PATT VOLATILE"
+	return h.execCmd(msg)
+}
+
+func (h *Handler) setDigitalPattern() error {
+	o := h.config.GetOrder()
+	oStr := make([]string, len(o))
+	for i, v := range o {
+		oStr[i] = strconv.Itoa(int(v))
+	}
+	msgPatt := strings.Join(oStr, ", ")
+	msg := fmt.Sprintf("DATA:PATTERN VOLATILE, %s", msgPatt)
 	return h.execCmd(msg)
 }
 
 func (h *Handler) execCmd(msg string) error {
-	if err := h.conn.Write(msg); err != nil {
+	if err := h.conn.Write(msg + "\n"); err != nil {
 		return err
 	}
 	return h.classifyResult()
 }
 
 func (h *Handler) classifyResult() error {
-	msg := "SYST:ERR?\n"
-	buf, err := h.conn.Query(msg, defaultBufSize)
+	msg := "SYST:ERR?"
+	buf, err := h.conn.Query(msg + "\n", defaultBufSize)
 	if err != nil {
 		return err
 	}

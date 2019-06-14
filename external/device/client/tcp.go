@@ -2,9 +2,14 @@ package client
 
 import (
 	"net"
+	"time"
 )
 
-const dialTimeout = 3
+const (
+	dialTimeout          = 3 * time.Second
+	writeTimeoutDuration = 3 * time.Second
+	readTimeoutDuration  = 3 * time.Second
+)
 
 // TCPClient represents the TCP client.
 type TCPClient struct {
@@ -28,6 +33,8 @@ func NewTCPClient(addr string) (*TCPClient, error) {
 
 // Write send the message to a device.
 func (c *TCPClient) Write(msg string) error {
+	c.Conn.SetWriteDeadline(time.Now().Add(writeTimeoutDuration))
+
 	byteMsg := []byte(msg)
 	if _, err := c.Conn.Write(byteMsg); err != nil {
 		return err
@@ -37,6 +44,8 @@ func (c *TCPClient) Write(msg string) error {
 
 // Read receive the message from a device.
 func (c *TCPClient) Read(bufSize int) ([]byte, error) {
+	c.Conn.SetReadDeadline(time.Now().Add(readTimeoutDuration))
+
 	buf := make([]byte, bufSize)
 	bufLen, err := c.Conn.Read(buf)
 	if err != nil {
