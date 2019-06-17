@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/mao-wfs/mao-ctrl/usecases/input"
+	"github.com/mao-wfs/mao-ctrl/internal/app/usecases/input"
 )
 
 // WFSController is the interface that describe the controller of MAO-WFS.

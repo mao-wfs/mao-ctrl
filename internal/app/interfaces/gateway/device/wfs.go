@@ -5,7 +5,7 @@ import (
 
 	"golang.org/x/xerrors"
 
-	"github.com/mao-wfs/mao-ctrl/domain"
+	"github.com/mao-wfs/mao-ctrl/internal/app/domain"
 )
 
 // wfsHandler represents the handler of MAO-WFS.

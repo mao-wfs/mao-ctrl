@@ -5,8 +5,8 @@ import (
 
 	"golang.org/x/xerrors"
 
-	"github.com/mao-wfs/mao-ctrl/domain"
-	"github.com/mao-wfs/mao-ctrl/usecases/input"
+	"github.com/mao-wfs/mao-ctrl/internal/app/domain"
+	"github.com/mao-wfs/mao-ctrl/internal/app/usecases/input"
 )
 
 type wfsUsecase struct {

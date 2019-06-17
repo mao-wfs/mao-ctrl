@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/mao-wfs/mao-ctrl/adapters/gateway/device"
-	"github.com/mao-wfs/mao-ctrl/config"
-	"github.com/mao-wfs/mao-ctrl/external/device/client"
+	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device"
+	"github.com/mao-wfs/mao-ctrl/internal/pkg/config"
+	"github.com/mao-wfs/mao-ctrl/internal/app/infrastructure/device/client"
 )
 
 const defaultBufSize = 1024
