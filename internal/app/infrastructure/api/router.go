@@ -31,7 +31,7 @@ func (r *Router) run() {
 	if err != nil {
 		r.Logger.Fatal(err)
 	}
-	r.Logger.Fatal(r.Start(conf.GetAddr()))
+	r.Logger.Fatal(r.Start(conf.Addr()))
 }
 
 func (r *Router) initialize() {
