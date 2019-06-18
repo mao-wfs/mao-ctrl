@@ -3,9 +3,8 @@ package config
 import (
 	"fmt"
 
-	"golang.org/x/xerrors"
-
 	"github.com/kelseyhightower/envconfig"
+	"golang.org/x/xerrors"
 )
 
 // CorrelatorConfig represents the configure of the correlator.
@@ -26,8 +25,8 @@ func LoadCorrelatorConfig() (*CorrelatorConfig, error) {
 	return conf, nil
 }
 
-// GetAddr returns the correlator address.
-func (c *CorrelatorConfig) GetAddr() string {
+// Addr returns the correlator address.
+func (c *CorrelatorConfig) Addr() string {
 	addr := fmt.Sprintf("%s:%d", c.Host, c.Port)
 	return addr
 }

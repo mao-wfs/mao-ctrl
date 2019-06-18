@@ -4,8 +4,8 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 
-	"github.com/mao-wfs/mao-ctrl/config"
-	"github.com/mao-wfs/mao-ctrl/registry"
+	"github.com/mao-wfs/mao-ctrl/internal/pkg/config"
+	"github.com/mao-wfs/mao-ctrl/internal/app/registry"
 )
 
 // Run runs the router of the API.

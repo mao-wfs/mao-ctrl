@@ -3,6 +3,8 @@ package config
 import (
 	"reflect"
 	"testing"
+
+	"github.com/mao-wfs/mao-ctrl/internal/pkg/testutil"
 )
 
 func TestLoadFGConfig(t *testing.T) {
@@ -12,7 +14,7 @@ func TestLoadFGConfig(t *testing.T) {
 		"FG_ORDER": "10,9,13,8,0",
 	}
 
-	reset := setEnvs(t, pairs)
+	reset := testutil.SetEnvs(t, pairs)
 	defer reset()
 
 	conf, err := LoadFGConfig()
@@ -36,7 +38,7 @@ func TestLoadFGConfigOrderDefault(t *testing.T) {
 		"FG_PORT": "5000",
 	}
 
-	reset := setEnvs(t, pairs)
+	reset := testutil.SetEnvs(t, pairs)
 	defer reset()
 
 	conf, err := LoadFGConfig()
@@ -59,7 +61,7 @@ func TestFGConfig_GetAddr(t *testing.T) {
 		Host: "127.0.0.1",
 		Port: 5000,
 	}
-	if got, want := conf.GetAddr(), "127.0.0.1:5000"; got != want {
+	if got, want := conf.Addr(), "127.0.0.1:5000"; got != want {
 		t.Fatalf("got %s, want %s", got, want)
 	}
 }

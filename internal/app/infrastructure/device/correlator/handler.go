@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/mao-wfs/mao-ctrl/adapters/gateway/device"
-	"github.com/mao-wfs/mao-ctrl/config"
-	"github.com/mao-wfs/mao-ctrl/external/device/client"
+	"github.com/mao-wfs/mao-ctrl/internal/app/infrastructure/device/client"
+	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device"
+	"github.com/mao-wfs/mao-ctrl/internal/pkg/config"
 )
 
 const defaultBufSize = 1024
@@ -26,7 +26,7 @@ func NewHandler() (device.CorrelatorHandler, error) {
 	if err != nil {
 		return nil, err
 	}
-	clt, err := client.NewTCPClient(conf.GetAddr())
+	clt, err := client.NewTCPClient(conf.Addr())
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +79,7 @@ func (h *Handler) haltCorrelation() error {
 }
 
 func (h *Handler) execCmd(msg string) error {
-	buf, err := h.conn.Query(msg + ";", defaultBufSize)
+	buf, err := h.conn.Query(msg+";", defaultBufSize)
 	if err != nil {
 		return err
 	}

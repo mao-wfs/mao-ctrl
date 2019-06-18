@@ -1,13 +1,13 @@
 package registry
 
 import (
-	"github.com/mao-wfs/mao-ctrl/adapters/controller"
-	"github.com/mao-wfs/mao-ctrl/adapters/gateway/device"
-	"github.com/mao-wfs/mao-ctrl/domain"
-	"github.com/mao-wfs/mao-ctrl/external/device/correlator"
-	"github.com/mao-wfs/mao-ctrl/external/device/fg"
-	"github.com/mao-wfs/mao-ctrl/usecases"
-	"github.com/mao-wfs/mao-ctrl/usecases/input"
+	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/controller"
+	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device"
+	"github.com/mao-wfs/mao-ctrl/internal/app/domain"
+	"github.com/mao-wfs/mao-ctrl/internal/app/infrastructure/device/correlator"
+	"github.com/mao-wfs/mao-ctrl/internal/app/infrastructure/device/fg"
+	"github.com/mao-wfs/mao-ctrl/internal/app/usecases"
+	"github.com/mao-wfs/mao-ctrl/internal/app/usecases/input"
 )
 
 type WFSContainer struct {
