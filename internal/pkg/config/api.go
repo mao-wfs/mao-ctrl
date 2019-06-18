@@ -9,9 +9,6 @@ import (
 
 // APIConfig represents the configuration of the API.
 type APIConfig struct {
-	// Host is the API host.
-	Host string
-
 	// Port is the port number the API listen on.
 	Port int16 `default:"3000"`
 }
@@ -27,6 +24,6 @@ func LoadAPIConfig() (*APIConfig, error) {
 
 // Addr returns the API address.
 func (c APIConfig) Addr() string {
-	addr := fmt.Sprintf("%s:%d", c.Host, c.Port)
+	addr := fmt.Sprintf(":%d", c.Port)
 	return addr
 }
