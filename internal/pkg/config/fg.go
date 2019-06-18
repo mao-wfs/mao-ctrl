@@ -3,9 +3,8 @@ package config
 import (
 	"fmt"
 
-	"golang.org/x/xerrors"
-
 	"github.com/kelseyhightower/envconfig"
+	"golang.org/x/xerrors"
 )
 
 // FGConfig represents the configure of the FG.
@@ -29,8 +28,8 @@ func LoadFGConfig() (*FGConfig, error) {
 	return conf, nil
 }
 
-// GetAddr returns the FG address.
-func (c *FGConfig) GetAddr() string {
+// Addr returns the FG address.
+func (c *FGConfig) Addr() string {
 	addr := fmt.Sprintf("%s:%d", c.Host, c.Port)
 	return addr
 }

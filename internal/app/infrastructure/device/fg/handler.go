@@ -8,9 +8,9 @@ import (
 
 	"golang.org/x/xerrors"
 
+	"github.com/mao-wfs/mao-ctrl/internal/app/infrastructure/device/client"
 	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device"
 	"github.com/mao-wfs/mao-ctrl/internal/pkg/config"
-	"github.com/mao-wfs/mao-ctrl/internal/app/infrastructure/device/client"
 )
 
 const defaultBufSize = 1024
@@ -27,7 +27,7 @@ func NewHandler() (device.FGHandler, error) {
 	if err != nil {
 		return nil, err
 	}
-	clt, err := client.NewTCPClient(conf.GetAddr())
+	clt, err := client.NewTCPClient(conf.Addr())
 	if err != nil {
 		return nil, err
 	}
@@ -117,7 +117,7 @@ func (h *Handler) execCmd(msg string) error {
 
 func (h *Handler) classifyResult() error {
 	msg := "SYST:ERR?"
-	buf, err := h.conn.Query(msg + "\n", defaultBufSize)
+	buf, err := h.conn.Query(msg+"\n", defaultBufSize)
 	if err != nil {
 		return err
 	}

@@ -1,11 +1,11 @@
-package config
+package testutil
 
 import (
 	"os"
 	"testing"
 )
 
-func setEnvs(t *testing.T, envs map[string]string) func() {
+func SetEnvs(t *testing.T, envs map[string]string) func() {
 	var resetFuncs []func()
 	t.Helper()
 	for k, v := range envs {

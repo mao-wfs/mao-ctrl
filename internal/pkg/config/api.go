@@ -3,18 +3,17 @@ package config
 import (
 	"fmt"
 
-	"golang.org/x/xerrors"
-
 	"github.com/kelseyhightower/envconfig"
+	"golang.org/x/xerrors"
 )
 
 // APIConfig represents the configuration of the API.
 type APIConfig struct {
 	// Host is the API host.
-	Host string `envconfig:"HOST"`
+	Host string
 
 	// Port is the port number the API listen on.
-	Port uint16 `default:"3030"`
+	Port int16 `default:"3000"`
 }
 
 // LoadAPIConfig loads the API configuration from environment variables.
@@ -26,8 +25,8 @@ func LoadAPIConfig() (*APIConfig, error) {
 	return conf, nil
 }
 
-// GetAddr returns the API address.
-func (c APIConfig) GetAddr() string {
+// Addr returns the API address.
+func (c APIConfig) Addr() string {
 	addr := fmt.Sprintf("%s:%d", c.Host, c.Port)
 	return addr
 }

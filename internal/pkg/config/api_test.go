@@ -2,6 +2,8 @@ package config
 
 import (
 	"testing"
+
+	"github.com/mao-wfs/mao-ctrl/internal/pkg/testutil"
 )
 
 func TestLoadAPIConfig(t *testing.T) {
@@ -10,7 +12,7 @@ func TestLoadAPIConfig(t *testing.T) {
 		"API_PORT": "3030",
 	}
 
-	reset := setEnvs(t, pairs)
+	reset := testutil.SetEnvs(t, pairs)
 	defer reset()
 
 	conf, err := LoadAPIConfig()
@@ -30,7 +32,7 @@ func TestLoadAPIConfigPortDefault(t *testing.T) {
 		"API_HOST": "127.0.0.1",
 	}
 
-	reset := setEnvs(t, pairs)
+	reset := testutil.SetEnvs(t, pairs)
 	defer reset()
 
 	conf, err := LoadAPIConfig()
@@ -50,7 +52,7 @@ func TestAPIConfig_GetAddr(t *testing.T) {
 		Host: "127.0.0.1",
 		Port: 5000,
 	}
-	if got, want := conf.GetAddr(), "127.0.0.1:5000"; got != want {
+	if got, want := conf.Addr(), "127.0.0.1:5000"; got != want {
 		t.Fatalf("got %s, want %s", got, want)
 	}
 }
