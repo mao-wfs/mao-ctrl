@@ -6,6 +6,7 @@ import (
 	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device"
 	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device/correlator"
 	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device/fg"
+	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/presenter"
 	"github.com/mao-wfs/mao-ctrl/internal/app/usecases/input"
 	"github.com/mao-wfs/mao-ctrl/internal/app/usecases/interactor"
 )
@@ -27,7 +28,7 @@ func (c *WFSContainer) NewWFSController() controller.WFSController {
 }
 
 func (c *WFSContainer) newWFSUsecase() input.WFSInputPort {
-	return interactor.NewWFSInteractor(domain.NewStatus(), c.newWFSHandler())
+	return interactor.NewWFSInteractor(domain.NewStatus(), c.newWFSHandler(), presenter.NewWFSPresenter())
 }
 
 func (c *WFSContainer) newWFSHandler() domain.Handler {
