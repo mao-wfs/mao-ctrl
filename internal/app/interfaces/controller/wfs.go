@@ -34,8 +34,14 @@ func (ctrl *wfsController) Start(c Context) error {
 		ctx = context.Background()
 	}
 
+	if ctrl.inputPort.IsRunning() {
+		apiErr := NewError(http.StatusBadRequest, "already running")
+		return c.JSON(apiErr.Code(), apiErr)
+	}
+
 	if err := ctrl.inputPort.Start(ctx); err != nil {
-		return err
+		apiErr := NewError(http.StatusInternalServerError, err.Error())
+		return c.JSON(apiErr.Code(), apiErr)
 	}
 	return c.JSON(http.StatusOK, "MAO-WFS started!")
 }
@@ -46,8 +52,14 @@ func (ctrl *wfsController) Halt(c Context) error {
 		ctx = context.Background()
 	}
 
+	if ctrl.inputPort.IsWaiting() {
+		apiErr := NewError(http.StatusBadRequest, "not running")
+		return c.JSON(apiErr.Code(), apiErr)
+	}
+
 	if err := ctrl.inputPort.Halt(ctx); err != nil {
-		return err
+		apiErr := NewError(http.StatusInternalServerError, err.Error())
+		return c.JSON(apiErr.Code(), apiErr)
 	}
 	return c.JSON(http.StatusOK, "MAO-WFS stoped!")
 }
