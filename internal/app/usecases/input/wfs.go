@@ -11,4 +11,10 @@ type WFSInputPort interface {
 
 	// Halt halts MAO-WFS.
 	Halt(ctx context.Context) error
+
+	// IsRunning checks whether MAO-WFS is running.
+	IsRunning() bool
+
+	// IsWaiting checks whether MAO-WFS is waiting.
+	IsWaiting() bool
 }
