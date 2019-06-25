@@ -1,35 +1,26 @@
 package registry
 
 import (
+	"github.com/mao-wfs/mao-ctrl/internal/app/domain"
 	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/controller"
 	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device"
-	"github.com/mao-wfs/mao-ctrl/internal/app/domain"
-	"github.com/mao-wfs/mao-ctrl/internal/app/infrastructure/device/correlator"
-	"github.com/mao-wfs/mao-ctrl/internal/app/infrastructure/device/fg"
-	"github.com/mao-wfs/mao-ctrl/internal/app/usecases"
+	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device/correlator"
+	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device/fg"
+	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/presenter"
 	"github.com/mao-wfs/mao-ctrl/internal/app/usecases/input"
+	"github.com/mao-wfs/mao-ctrl/internal/app/usecases/interactor"
 )
 
 type WFSContainer struct {
-	correlator device.CorrelatorHandler
-	fg         device.FGHandler
+	correlator correlator.Handler
+	fg         fg.Handler
 }
 
-func NewWFSContainer() (*WFSContainer, error) {
-	corr, err := correlator.NewHandler()
-	if err != nil {
-		return nil, err
-	}
-	fg, err := fg.NewHandler()
-	if err != nil {
-		return nil, err
-	}
-
-	c := &WFSContainer{
+func NewWFSContainer(corr correlator.Handler, fg fg.Handler) *WFSContainer {
+	return &WFSContainer{
 		correlator: corr,
 		fg:         fg,
 	}
-	return c, nil
 }
 
 func (c *WFSContainer) NewWFSController() controller.WFSController {
@@ -37,9 +28,9 @@ func (c *WFSContainer) NewWFSController() controller.WFSController {
 }
 
 func (c *WFSContainer) newWFSUsecase() input.WFSInputPort {
-	return usecases.NewWFSUsecase(c.newWFSHandler())
+	return interactor.NewWFSInteractor(domain.NewStatus(), c.newWFSHandler(), presenter.NewWFSPresenter())
 }
 
-func (c *WFSContainer) newWFSHandler() domain.WFSHandler {
-	return device.NewWFSHandler(c.correlator, c.fg)
+func (c *WFSContainer) newWFSHandler() domain.Handler {
+	return device.NewHandler(c.correlator, c.fg)
 }

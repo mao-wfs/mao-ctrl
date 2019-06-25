@@ -4,8 +4,10 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 
-	"github.com/mao-wfs/mao-ctrl/internal/pkg/config"
+	"github.com/mao-wfs/mao-ctrl/internal/app/infrastructure/device/correlator"
+	"github.com/mao-wfs/mao-ctrl/internal/app/infrastructure/device/fg"
 	"github.com/mao-wfs/mao-ctrl/internal/app/registry"
+	"github.com/mao-wfs/mao-ctrl/internal/pkg/config"
 )
 
 // Run runs the router of the API.
@@ -39,10 +41,16 @@ func (r *Router) initialize() {
 		middleware.Logger(),
 		middleware.Recover(),
 	)
-	ctn, err := registry.NewWFSContainer()
+
+	corr, err := correlator.NewHandler()
 	if err != nil {
 		r.Logger.Fatal(err)
 	}
+	fg, err := fg.NewHandler()
+	if err != nil {
+		r.Logger.Fatal(err)
+	}
+	ctn := registry.NewWFSContainer(corr, fg)
 
 	ctrl := ctn.NewWFSController()
 	r.GET("/start", func(c echo.Context) error {

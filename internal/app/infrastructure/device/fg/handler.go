@@ -9,7 +9,7 @@ import (
 	"golang.org/x/xerrors"
 
 	"github.com/mao-wfs/mao-ctrl/internal/app/infrastructure/device/client"
-	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device"
+	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device/fg"
 	"github.com/mao-wfs/mao-ctrl/internal/pkg/config"
 )
 
@@ -22,7 +22,7 @@ type Handler struct {
 }
 
 // NewHandler returns a new FG handler.
-func NewHandler() (device.FGHandler, error) {
+func NewHandler() (fg.Handler, error) {
 	conf, err := config.LoadFGConfig()
 	if err != nil {
 		return nil, err

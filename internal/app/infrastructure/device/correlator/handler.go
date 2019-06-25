@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/mao-wfs/mao-ctrl/internal/app/infrastructure/device/client"
-	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device"
+	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device/correlator"
 	"github.com/mao-wfs/mao-ctrl/internal/pkg/config"
 )
 
@@ -21,7 +21,7 @@ type Handler struct {
 }
 
 // NewHandler returns a new correlator handler.
-func NewHandler() (device.CorrelatorHandler, error) {
+func NewHandler() (correlator.Handler, error) {
 	conf, err := config.LoadCorrelatorConfig()
 	if err != nil {
 		return nil, err

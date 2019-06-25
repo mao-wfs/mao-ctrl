@@ -6,24 +6,26 @@ import (
 	"golang.org/x/xerrors"
 
 	"github.com/mao-wfs/mao-ctrl/internal/app/domain"
+	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device/correlator"
+	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device/fg"
 )
 
-// wfsHandler represents the handler of MAO-WFS.
-type wfsHandler struct {
-	correlator CorrelatorHandler
-	fg         FGHandler
+// handler represents the handler of MAO-WFS.
+type handler struct {
+	correlator correlator.Handler
+	fg         fg.Handler
 }
 
-// NewWFSHandler returns a new handler of MAO-WFS.
-func NewWFSHandler(corr CorrelatorHandler, fg FGHandler) domain.WFSHandler {
-	return &wfsHandler{
+// NewHandler returns a new handler of MAO-WFS.
+func NewHandler(corr correlator.Handler, fg fg.Handler) domain.Handler {
+	return &handler{
 		correlator: corr,
 		fg:         fg,
 	}
 }
 
 // Start starts MAO-WFS.
-func (h *wfsHandler) Start(ctx context.Context) error {
+func (h *handler) Start(ctx context.Context) error {
 	if err := h.correlator.Initialize(ctx); err != nil {
 		return xerrors.Errorf("failed to initialize the correlator: %w", err)
 	}
@@ -52,7 +54,7 @@ func (h *wfsHandler) Start(ctx context.Context) error {
 }
 
 // Halt halts MAO-WFS.
-func (h *wfsHandler) Halt(ctx context.Context) error {
+func (h *handler) Halt(ctx context.Context) error {
 	corrCh := make(chan error)
 	fgCh := make(chan error)
 
