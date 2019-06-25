@@ -11,6 +11,11 @@ import (
 	"github.com/mao-wfs/mao-ctrl/internal/app/usecases/output"
 )
 
+var (
+	errAlreadyRunning = xerrors.New("MAO-WFS is already running")
+	errNotRunning     = xerrors.New("MAO-WFS is not running")
+)
+
 // WFSInteractor is the interactor of MAO-WFS services.
 type WFSInteractor struct {
 	status     *domain.Status
@@ -30,8 +35,7 @@ func NewWFSInteractor(s *domain.Status, h domain.Handler, opt output.WFSOutputPo
 // Start starts MAO-WFS.
 func (i *WFSInteractor) Start(ctx context.Context) output.Error {
 	if i.status.IsRunning() {
-		err := xerrors.New("already running")
-		return i.outputPort.ResponseError(http.StatusBadRequest, err)
+		return i.outputPort.ResponseError(http.StatusBadRequest, errAlreadyRunning)
 	}
 	if err := i.handler.Start(ctx); err != nil {
 		return i.outputPort.ResponseError(http.StatusInternalServerError, err)
@@ -43,8 +47,7 @@ func (i *WFSInteractor) Start(ctx context.Context) output.Error {
 // Halt halts MAO-WFS.
 func (i *WFSInteractor) Halt(ctx context.Context) output.Error {
 	if i.status.IsWaiting() {
-		err := xerrors.New("not running")
-		return i.outputPort.ResponseError(http.StatusBadRequest, err)
+		return i.outputPort.ResponseError(http.StatusBadRequest, errNotRunning)
 	}
 	if err := i.handler.Halt(ctx); err != nil {
 		return i.outputPort.ResponseError(http.StatusInternalServerError, err)
