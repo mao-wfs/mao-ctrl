@@ -7,6 +7,18 @@ import (
 	"github.com/mao-wfs/mao-ctrl/internal/app/usecases/input"
 )
 
+type successResponse struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
+func newSuccessResponse(msg string) *successResponse {
+	return &successResponse{
+		Code:    http.StatusOK,
+		Message: msg,
+	}
+}
+
 // WFSController is the interface that describe the controller of MAO-WFS.
 type WFSController interface {
 	// Start starts MAO-WFS.
@@ -38,7 +50,7 @@ func (ctrl *wfsController) Start(c Context) error {
 		c.JSON(err.StatusCode(), err)
 		return err
 	}
-	return c.JSON(http.StatusOK, "MAO-WFS started!")
+	return c.JSON(http.StatusOK, newSuccessResponse("MAO-WFS starts!"))
 }
 
 func (ctrl *wfsController) Halt(c Context) error {
@@ -51,5 +63,5 @@ func (ctrl *wfsController) Halt(c Context) error {
 		c.JSON(err.StatusCode(), err)
 		return err
 	}
-	return c.JSON(http.StatusOK, "MAO-WFS stoped!")
+	return c.JSON(http.StatusOK, newSuccessResponse("MAO-WFS stopped"))
 }
