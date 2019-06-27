@@ -28,7 +28,7 @@ func (c *WFSContainer) NewWFSController() controller.WFSController {
 }
 
 func (c *WFSContainer) newWFSUsecase() input.WFSInputPort {
-	return interactor.NewWFSInteractor(domain.NewStatus(), c.newWFSHandler(), presenter.NewWFSPresenter())
+	return interactor.NewWFSInteractor(domain.NewStatus(), c.newWFSHandler(), presenter.NewErrorPresenter())
 }
 
 func (c *WFSContainer) newWFSHandler() domain.Handler {
