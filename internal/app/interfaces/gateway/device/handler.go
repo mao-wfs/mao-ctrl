@@ -7,20 +7,20 @@ import (
 
 	"github.com/mao-wfs/mao-ctrl/internal/app/domain"
 	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device/correlator"
-	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device/fg"
+	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device/optswitch"
 )
 
 // handler represents the handler of MAO-WFS.
 type handler struct {
 	correlator correlator.Handler
-	fg         fg.Handler
+	optswitch  optswitch.Handler
 }
 
 // NewHandler returns a new handler of MAO-WFS.
-func NewHandler(corr correlator.Handler, fg fg.Handler) domain.Handler {
+func NewHandler(corr correlator.Handler, sw optswitch.Handler) domain.Handler {
 	return &handler{
 		correlator: corr,
-		fg:         fg,
+		optswitch:  sw,
 	}
 }
 
@@ -29,26 +29,26 @@ func (h *handler) Start(ctx context.Context) error {
 	if err := h.correlator.Initialize(ctx); err != nil {
 		return xerrors.Errorf("failed to initialize the correlator: %w", err)
 	}
-	if err := h.fg.Initialize(ctx); err != nil {
-		return xerrors.Errorf("failed to initialize the FG: %w", err)
+	if err := h.optswitch.Initialize(ctx); err != nil {
+		return xerrors.Errorf("failed to initialize the optical switch: %w", err)
 	}
 
 	corrCh := make(chan error)
-	fgCh := make(chan error)
+	swCh := make(chan error)
 
 	go func() {
 		defer close(corrCh)
 		corrCh <- h.correlator.Start(ctx)
 	}()
 	go func() {
-		defer close(fgCh)
-		fgCh <- h.fg.Start(ctx)
+		defer close(swCh)
+		swCh <- h.optswitch.Start(ctx)
 	}()
 
 	// TODO: Refactor the error handling
-	corrErr, fgErr := <-corrCh, <-fgCh
-	if corrErr != nil || fgErr != nil {
-		return xerrors.Errorf("correlator: %+v, FG: %+v", corrErr, fgErr)
+	corrErr, swErr := <-corrCh, <-swCh
+	if corrErr != nil || swErr != nil {
+		return xerrors.Errorf("correlator: %+v, optical switch: %+v", corrErr, swErr)
 	}
 	return nil
 }
@@ -56,21 +56,21 @@ func (h *handler) Start(ctx context.Context) error {
 // Halt halts MAO-WFS.
 func (h *handler) Halt(ctx context.Context) error {
 	corrCh := make(chan error)
-	fgCh := make(chan error)
+	swCh := make(chan error)
 
 	go func() {
 		defer close(corrCh)
 		corrCh <- h.correlator.Halt(ctx)
 	}()
 	go func() {
-		defer close(fgCh)
-		fgCh <- h.fg.Halt(ctx)
+		defer close(swCh)
+		swCh <- h.optswitch.Halt(ctx)
 	}()
 
 	// TODO: Refactor the error handling
-	corrErr, fgErr := <-corrCh, <-fgCh
-	if corrErr != nil || fgErr != nil {
-		return xerrors.Errorf("correlator: %+v, FG: %+v", corrErr, fgErr)
+	corrErr, swErr := <-corrCh, <-swCh
+	if corrErr != nil || swErr != nil {
+		return xerrors.Errorf("correlator: %+v, optical switch: %+v", corrErr, swErr)
 	}
 	return nil
 }

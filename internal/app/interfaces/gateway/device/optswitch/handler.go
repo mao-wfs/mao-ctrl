@@ -1,4 +1,4 @@
-package fg
+package optswitch
 
 import (
 	"context"
