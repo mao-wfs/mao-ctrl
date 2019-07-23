@@ -2,22 +2,16 @@ package correlator
 
 import (
 	"context"
-	"fmt"
-	"regexp"
-	"strconv"
 	"time"
 
-	"github.com/mao-wfs/mao-ctrl/internal/app/infrastructure/device/client"
 	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device/correlator"
 	"github.com/mao-wfs/mao-ctrl/internal/pkg/config"
+	"github.com/mao-wfs/mao-ctrl/internal/pkg/octadm"
 )
 
-const defaultBufSize = 1024
-
-// Handler represents the correlator handler of MAO-WFS.
-type Handler struct {
-	config *config.CorrelatorConfig
-	conn   *client.TCPClient
+type handler struct {
+	config     *config.CorrelatorConfig
+	correlator octadm.Handler
 }
 
 // NewHandler returns a new correlator handler.
@@ -26,87 +20,30 @@ func NewHandler() (correlator.Handler, error) {
 	if err != nil {
 		return nil, err
 	}
-	clt, err := client.NewTCPClient(conf.Addr())
+	corr, err := octadm.NewHandler(conf.Addr())
 	if err != nil {
 		return nil, err
 	}
-	h := &Handler{
-		config: conf,
-		conn:   clt,
+	h := &handler{
+		config:     conf,
+		correlator: corr,
 	}
 	return h, nil
 }
 
-// Start starts the correlator of MAO-WFS.
-func (h *Handler) Start(ctx context.Context) error {
-	return h.startCorrelation()
+// Start implements the Handler Start method.
+func (h *handler) Start(ctx context.Context) error {
+	var t time.Time
+	return h.correlator.Start(t, octadm.Cross12)
 }
 
-// Halt halts the correlator of MAO-WFS.
-func (h *Handler) Halt(ctx context.Context) error {
-	return h.haltCorrelation()
+// Halt implements the Handler Halt method.
+func (h *handler) Halt(ctx context.Context) error {
+	var t time.Time
+	return h.correlator.Halt(t)
 }
 
-// Initialize initializes the correlator of MAO-WFS.
-func (h *Handler) Initialize(ctx context.Context) error {
-	return nil
-}
-
-func (h *Handler) startCorrelation() error {
-	var st time.Time
-	msg := fmt.Sprintf(
-		"ctl_corstart=%04dy%03dd%02dh%02dm%02ds:0x10",
-		st.Year(),
-		st.YearDay(),
-		st.Hour(),
-		st.Minute(),
-		st.Second(),
-	)
-	return h.execCmd(msg)
-}
-
-func (h *Handler) haltCorrelation() error {
-	var ht time.Time
-	msg := fmt.Sprintf(
-		"ctl_corstop=%04dy%03dd%02dh%02dm%02ds",
-		ht.Year(),
-		ht.YearDay(),
-		ht.Hour(),
-		ht.Minute(),
-		ht.Second(),
-	)
-	return h.execCmd(msg)
-}
-
-func (h *Handler) execCmd(msg string) error {
-	buf, err := h.conn.Query(msg+";", defaultBufSize)
-	if err != nil {
-		return err
-	}
-	res := string(buf)
-	return h.classifyResult(res)
-}
-
-func (h *Handler) classifyResult(res string) error {
-	resCode := h.extractResultCode(res)
-	switch resCode {
-	case resultNotExecutable:
-		return errNotExecutable
-	case resultInvalidArgs:
-		return errInvalidArgs
-	case resultUnknownError:
-		return errUnknown
-	case resultConflict:
-		return errConflict
-	case resultInvalidKwd:
-		return errInvaildKwd
-	default:
-		return nil
-	}
-}
-
-func (h *Handler) extractResultCode(res string) int {
-	re := regexp.MustCompile(`[0-9]`)
-	resCode, _ := strconv.Atoi(re.FindString(res))
-	return resCode
+// Initialize implements the Handler Initialize method.
+func (h *handler) Initialize(ctx context.Context) error {
+	return h.correlator.SyncExternal()
 }

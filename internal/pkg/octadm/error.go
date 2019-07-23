@@ -1,4 +1,4 @@
-package correlator
+package octadm
 
 import (
 	"golang.org/x/xerrors"
