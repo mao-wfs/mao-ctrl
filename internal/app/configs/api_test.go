@@ -1,8 +1,9 @@
-package config
+package configs_test
 
 import (
 	"testing"
 
+	"github.com/mao-wfs/mao-ctrl/internal/app/configs"
 	"github.com/mao-wfs/mao-ctrl/internal/pkg/testutil"
 )
 
@@ -14,7 +15,7 @@ func TestLoadAPIConfig(t *testing.T) {
 	reset := testutil.SetEnvs(t, pairs)
 	defer reset()
 
-	conf, err := LoadAPIConfig()
+	conf, err := configs.LoadAPIConfig()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -24,7 +25,7 @@ func TestLoadAPIConfig(t *testing.T) {
 }
 
 func TestLoadAPIConfigPortDefault(t *testing.T) {
-	conf, err := LoadAPIConfig()
+	conf, err := configs.LoadAPIConfig()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -33,11 +34,14 @@ func TestLoadAPIConfigPortDefault(t *testing.T) {
 	}
 }
 
-func TestAPIConfig_GetAddr(t *testing.T) {
-	conf := &APIConfig{
+func TestAPIConfig(t *testing.T) {
+	conf := &configs.APIConfig{
 		Port: 5000,
 	}
-	if got, want := conf.Addr(), ":5000"; got != want {
-		t.Fatalf("got %s, want %s", got, want)
-	}
+
+	t.Run("get address", func(t *testing.T) {
+		if got, want := conf.Addr(), ":5000"; got != want {
+			t.Fatalf("got %s, want %s", got, want)
+		}
+	})
 }

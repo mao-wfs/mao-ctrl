@@ -1,4 +1,4 @@
-package config
+package configs
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"golang.org/x/xerrors"
 )
 
-// CorrelatorConfig represents the configure of the correlator.
+// CorrelatorConfig is the configure of the correlator.
 type CorrelatorConfig struct {
 	// Host is the correlator host.
 	Host string `required:"true"`

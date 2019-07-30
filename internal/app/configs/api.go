@@ -1,4 +1,4 @@
-package config
+package configs
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"golang.org/x/xerrors"
 )
 
-// APIConfig represents the configuration of the API.
+// APIConfig is the configuration of the API.
 type APIConfig struct {
 	// Port is the port number the API listen on.
 	Port int16 `default:"3000"`
@@ -17,7 +17,7 @@ type APIConfig struct {
 func LoadAPIConfig() (*APIConfig, error) {
 	conf := new(APIConfig)
 	if err := envconfig.Process("api", conf); err != nil {
-		return nil, xerrors.Errorf("failed to load API the configuration: %w", err)
+		return nil, xerrors.Errorf("failed to load the API configuration: %w", err)
 	}
 	return conf, nil
 }

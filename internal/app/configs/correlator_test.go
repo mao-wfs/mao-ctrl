@@ -1,8 +1,9 @@
-package config
+package configs_test
 
 import (
 	"testing"
 
+	"github.com/mao-wfs/mao-ctrl/internal/app/configs"
 	"github.com/mao-wfs/mao-ctrl/internal/pkg/testutil"
 )
 
@@ -15,7 +16,7 @@ func TestLoadCorrelatorConfig(t *testing.T) {
 	reset := testutil.SetEnvs(t, pairs)
 	defer reset()
 
-	conf, err := LoadCorrelatorConfig()
+	conf, err := configs.LoadCorrelatorConfig()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -27,12 +28,15 @@ func TestLoadCorrelatorConfig(t *testing.T) {
 	}
 }
 
-func TestCorrelatorConfig_GetAddr(t *testing.T) {
-	conf := &CorrelatorConfig{
+func TestCorrelatorConfig(t *testing.T) {
+	conf := &configs.CorrelatorConfig{
 		Host: "127.0.0.1",
 		Port: 5000,
 	}
-	if got, want := conf.Addr(), "127.0.0.1:5000"; got != want {
-		t.Fatalf("got %s, want %s", got, want)
-	}
+
+	t.Run("get address", func(t *testing.T) {
+		if got, want := conf.Addr(), "127.0.0.1:5000"; got != want {
+			t.Fatalf("got %s, want %s", got, want)
+		}
+	})
 }
