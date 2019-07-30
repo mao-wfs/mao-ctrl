@@ -4,19 +4,19 @@ import (
 	"context"
 	"time"
 
+	"github.com/mao-wfs/mao-ctrl/internal/app/configs"
 	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device/correlator"
-	"github.com/mao-wfs/mao-ctrl/internal/pkg/config"
 	"github.com/mao-wfs/mao-ctrl/internal/pkg/octadm"
 )
 
 type handler struct {
-	config     *config.CorrelatorConfig
+	config     *configs.CorrelatorConfig
 	correlator octadm.Handler
 }
 
 // NewHandler returns a new correlator handler.
 func NewHandler() (correlator.Handler, error) {
-	conf, err := config.LoadCorrelatorConfig()
+	conf, err := configs.LoadCorrelatorConfig()
 	if err != nil {
 		return nil, err
 	}
