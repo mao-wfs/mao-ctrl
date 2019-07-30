@@ -4,10 +4,10 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 
+	"github.com/mao-wfs/mao-ctrl/internal/app/configs"
 	"github.com/mao-wfs/mao-ctrl/internal/app/infrastructure/device/correlator"
-	"github.com/mao-wfs/mao-ctrl/internal/app/infrastructure/device/fg"
+	"github.com/mao-wfs/mao-ctrl/internal/app/infrastructure/device/optswitch"
 	"github.com/mao-wfs/mao-ctrl/internal/app/registry"
-	"github.com/mao-wfs/mao-ctrl/internal/pkg/config"
 )
 
 // Run runs the router of the API.
@@ -29,7 +29,7 @@ func newRouter() *Router {
 }
 
 func (r *Router) run() {
-	conf, err := config.LoadAPIConfig()
+	conf, err := configs.LoadAPIConfig()
 	if err != nil {
 		r.Logger.Fatal(err)
 	}
@@ -46,11 +46,13 @@ func (r *Router) initialize() {
 	if err != nil {
 		r.Logger.Fatal(err)
 	}
-	fg, err := fg.NewHandler()
+
+	sw, err := optswitch.NewHandler()
 	if err != nil {
 		r.Logger.Fatal(err)
 	}
-	ctn := registry.NewWFSContainer(corr, fg)
+
+	ctn := registry.NewWFSContainer(corr, sw)
 
 	ctrl := ctn.NewWFSController()
 	r.GET("/start", func(c echo.Context) error {

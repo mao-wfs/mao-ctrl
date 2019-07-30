@@ -5,7 +5,7 @@ import (
 	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/controller"
 	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device"
 	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device/correlator"
-	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device/fg"
+	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/gateway/device/optswitch"
 	"github.com/mao-wfs/mao-ctrl/internal/app/interfaces/presenter"
 	"github.com/mao-wfs/mao-ctrl/internal/app/usecases/input"
 	"github.com/mao-wfs/mao-ctrl/internal/app/usecases/interactor"
@@ -13,13 +13,13 @@ import (
 
 type WFSContainer struct {
 	correlator correlator.Handler
-	fg         fg.Handler
+	optswitch  optswitch.Handler
 }
 
-func NewWFSContainer(corr correlator.Handler, fg fg.Handler) *WFSContainer {
+func NewWFSContainer(corr correlator.Handler, sw optswitch.Handler) *WFSContainer {
 	return &WFSContainer{
 		correlator: corr,
-		fg:         fg,
+		optswitch:  sw,
 	}
 }
 
@@ -32,5 +32,5 @@ func (c *WFSContainer) newWFSUsecase() input.WFSInputPort {
 }
 
 func (c *WFSContainer) newWFSHandler() domain.Handler {
-	return device.NewHandler(c.correlator, c.fg)
+	return device.NewHandler(c.correlator, c.optswitch)
 }
