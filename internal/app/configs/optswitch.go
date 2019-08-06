@@ -41,7 +41,7 @@ func (c *OptSwitchConfig) PGAddr() string {
 }
 
 // Order returns the switching order.
-func (c *OptSwitchConfig) Order() []int16 {
+func (c *OptSwitchConfig) Order() []int {
 	return c.PG.Order
 }
 
@@ -60,7 +60,8 @@ type PGConfig struct {
 	Port int16 `required:"true"`
 
 	// Order is the switching order.
-	Order []int16 `default:"10,9,13,8,0,80,16,32"`
+	Order []int `default:"2500,2304,3328,2048,0,20480,4096,8192"`
+
 }
 
 // FGConfig is the configuration of the function generator (Agilent 33500B Seriese).

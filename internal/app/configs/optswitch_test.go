@@ -12,7 +12,7 @@ func TestLoadOptSwitchConfig(t *testing.T) {
 	pairs := map[string]string{
 		"PG_HOST":  "127.0.0.1",
 		"PG_PORT":  "5000",
-		"PG_ORDER": "10,9,13,8,0",
+		"PG_ORDER": "2048,0,20480,4096,8192",
 		"FG_HOST":  "127.0.0.1",
 		"FG_PORT":  "5001",
 	}
@@ -30,7 +30,7 @@ func TestLoadOptSwitchConfig(t *testing.T) {
 	if got, want := conf.PG.Port, int16(5000); got != want {
 		t.Fatalf("got %d, want %d", got, want)
 	}
-	if got, want := conf.PG.Order, []int16{10, 9, 13, 8, 0}; !reflect.DeepEqual(got, want) {
+	if got, want := conf.PG.Order, []int{2048, 0, 20480, 4096, 8192}; !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %d, want %d", got, want)
 	}
 	if got, want := conf.FG.Host, "127.0.0.1"; got != want {
@@ -62,7 +62,7 @@ func TestLoadOptSwitchConfigOrderDefault(t *testing.T) {
 	if got, want := conf.PG.Port, int16(5000); got != want {
 		t.Fatalf("got %d, want %d", got, want)
 	}
-	if got, want := conf.PG.Order, []int16{10, 9, 13, 8, 0, 80, 16, 32}; !reflect.DeepEqual(got, want) {
+	if got, want := conf.PG.Order, []int{2500, 2304, 3328, 2048, 0, 20480, 4096, 8192}; !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %d, want %d", got, want)
 	}
 	if got, want := conf.FG.Host, "127.0.0.1"; got != want {
@@ -78,7 +78,7 @@ func TestOptSwitchConfig(t *testing.T) {
 		PG: &configs.PGConfig{
 			Host:  "127.0.0.1",
 			Port:  5000,
-			Order: []int16{10, 9, 13, 8, 0, 80, 16, 32},
+			Order: []int{2048, 0, 20480, 4096, 8192},
 		},
 		FG: &configs.FGConfig{
 			Host: "127.0.0.1",
@@ -93,7 +93,7 @@ func TestOptSwitchConfig(t *testing.T) {
 	})
 
 	t.Run("get switching order", func(t *testing.T) {
-		if got, want := conf.Order(), []int16{10, 9, 13, 8, 0, 80, 16, 32}; !reflect.DeepEqual(got, want) {
+		if got, want := conf.Order(), []int{2048, 0, 20480, 4096, 8192}; !reflect.DeepEqual(got, want) {
 			t.Fatalf("got %d, want %d", got, want)
 		}
 	})
