@@ -2,9 +2,11 @@ package octadm
 
 import (
 	"context"
+	"fmt"
 	"net"
 	"regexp"
 	"strconv"
+	"time"
 )
 
 var responseRegexp = regexp.MustCompile(`[0-9]`)
@@ -35,18 +37,25 @@ type Client interface {
 	QueryContext(ctx context.Context, cmd string) (res []byte, err error)
 }
 
-func newClient(addr string) (Client, error) {
+func newClient(addr string, timeout time.Duration) (Client, error) {
 	tcpAddr, err := net.ResolveTCPAddr("tcp", addr)
 	if err != nil {
 		return nil, err
 	}
 
-	conn, err := net.DialTCP("tcp", nil, tcpAddr)
+	d := net.Dialer{
+		Timeout: timeout,
+	}
+	conn, err := d.Dial("tcp", tcpAddr.String())
 	if err != nil {
 		return nil, err
 	}
+	tcpConn, ok := conn.(*net.TCPConn)
+	if !ok {
+		return nil, fmt.Errorf("failed to cast %T to *net.TCPConn", conn)
+	}
 	c := &client{
-		conn: conn,
+		conn: tcpConn,
 	}
 	return c, nil
 }

@@ -53,8 +53,8 @@ type Handler interface {
 }
 
 // NewHandler returns a new handler of OCTAD-M (Elecs Industry Co., Ltd.).
-func NewHandler(addr string) (Handler, error) {
-	c, err := newClient(addr)
+func NewHandler(addr string, timeout time.Duration) (Handler, error) {
+	c, err := newClient(addr, timeout)
 	if err != nil {
 		return nil, err
 	}

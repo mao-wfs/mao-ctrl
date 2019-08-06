@@ -9,6 +9,8 @@ import (
 	"github.com/mao-wfs/mao-ctrl/internal/pkg/octadm"
 )
 
+const dialTimeout = 5 * time.Second
+
 type handler struct {
 	config     *configs.CorrelatorConfig
 	correlator octadm.Handler
@@ -20,7 +22,7 @@ func NewHandler() (correlator.Handler, error) {
 	if err != nil {
 		return nil, err
 	}
-	corr, err := octadm.NewHandler(conf.Addr())
+	corr, err := octadm.NewHandler(conf.Addr(), dialTimeout)
 	if err != nil {
 		return nil, err
 	}
