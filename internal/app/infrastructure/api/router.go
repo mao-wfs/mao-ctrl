@@ -46,11 +46,13 @@ func (r *Router) initialize() {
 	if err != nil {
 		r.Logger.Fatal(err)
 	}
+	defer corr.Close()
 
 	sw, err := optswitch.NewHandler()
 	if err != nil {
 		r.Logger.Fatal(err)
 	}
+	defer sw.Close()
 
 	ctn := registry.NewWFSContainer(corr, sw)
 

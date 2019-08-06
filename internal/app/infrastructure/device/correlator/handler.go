@@ -33,6 +33,11 @@ func NewHandler() (correlator.Handler, error) {
 	return h, nil
 }
 
+// Close implements the Handler Close method.
+func (h *handler) Close() error {
+	return h.correlator.Close()
+}
+
 // Start implements the Handler Start method.
 func (h *handler) Start(ctx context.Context) error {
 	var t time.Time

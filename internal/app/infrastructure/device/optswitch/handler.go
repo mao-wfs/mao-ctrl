@@ -51,6 +51,14 @@ func NewHandler() (optswitch.Handler, error) {
 	return h, nil
 }
 
+// Close implements the Handler Close method.
+func (h *handler) Close() error {
+	if err := h.pg.Close(); err != nil {
+		return err
+	}
+	return h.fg.Close()
+}
+
 // Start implements the Handler Start method.
 func (h *handler) Start(ctx context.Context) error {
 	if err := h.fg.Exec("INIT1:CONT ON"); err != nil {

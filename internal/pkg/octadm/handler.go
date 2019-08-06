@@ -10,6 +10,9 @@ import (
 
 // Handler is the handler of OCTAD-M (Elecs Industry Co., Ltd.)
 type Handler interface {
+	// Close closes the connection.
+	Close() error
+
 	// Start starts the correlation.
 	Start(t time.Time, m CorrelationMode) error
 
